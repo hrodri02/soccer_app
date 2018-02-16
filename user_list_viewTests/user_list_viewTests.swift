@@ -5,7 +5,7 @@
 //  Created by Brayan Rodriguez  on 7/6/17.
 //  Copyright © 2017 Brayan Rodriguez. All rights reserved.
 //
-
+/*
 import XCTest
 @testable import user_list_view
 
@@ -34,3 +34,4 @@ class user_list_viewTests: XCTestCase {
     }
     
 }
+ */

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '00B43CE2681AD186D21C73394F27F301'
+               BlueprintIdentifier = 'C47778A37F84F6F794883AC0242E4CF8'
                BlueprintName = 'Pods-user_list_view'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libPods-user_list_view.a'>

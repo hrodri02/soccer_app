@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class EventTableViewCell: UITableViewCell {
     
     // MARK: properties

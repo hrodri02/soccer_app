@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/*
 class EventTableViewController: UITableViewController {
 
     var events = [Event]()
@@ -128,3 +128,4 @@ class EventTableViewController: UITableViewController {
         
     }
 }
+ */
