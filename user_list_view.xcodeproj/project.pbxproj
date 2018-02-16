@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06206FE82037924100ECA8F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06206FE72037924100ECA8F6 /* Constants.swift */; };
+		06206FEA20379E1200ECA8F6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06206FE920379E1200ECA8F6 /* Constants.swift */; };
 		0641F84A20322DF1008136C4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0641F84920322DF0008136C4 /* GoogleService-Info.plist */; };
 		06421AF61FAC16D5004DA95E /* PositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06421AF51FAC16D5004DA95E /* PositionCell.swift */; };
 		06421AF81FAC6BEC004DA95E /* ExperienceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06421AF71FAC6BEC004DA95E /* ExperienceCell.swift */; };
@@ -76,6 +77,7 @@
 
 /* Begin PBXFileReference section */
 		06206FE72037924100ECA8F6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		06206FE920379E1200ECA8F6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0641F84920322DF0008136C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		06421AF51FAC16D5004DA95E /* PositionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCell.swift; sourceTree = "<group>"; };
 		06421AF71FAC6BEC004DA95E /* ExperienceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperienceCell.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				0C5CE83B1F0EA2C9004847D7 /* Info.plist */,
 				0641F84920322DF0008136C4 /* GoogleService-Info.plist */,
 				06206FE72037924100ECA8F6 /* Constants.swift */,
+				06206FE920379E1200ECA8F6 /* Constants.swift */,
 			);
 			path = user_list_view;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				0C320B071F2E702A002BE4A1 /* UpperFriendsVC.swift in Sources */,
 				0C1DDC151F47C78B005AB640 /* FriendsTVC.swift in Sources */,
 				06421AF81FAC6BEC004DA95E /* ExperienceCell.swift in Sources */,
+				06206FEA20379E1200ECA8F6 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
