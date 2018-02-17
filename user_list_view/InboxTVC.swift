@@ -195,7 +195,24 @@ class InboxTVC: UITableViewController {
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message()
-                message.setValuesForKeys(dictionary)
+                
+                if dictionary["imageURL"] != nil {
+                    message.counter = dictionary["counter"] as? NSNumber
+                    message.fromId = dictionary["fromId"] as? String
+                    message.text = dictionary["text"] as? String
+                    message.timestamp = dictionary["timestamp"] as? NSNumber
+                    message.toId = dictionary["toId"] as? String
+                    message.imageURL = dictionary["imageURL"] as? String
+                    message.imageWidth = dictionary["imageWidth"] as? NSNumber
+                    message.imageHeight = dictionary["imageHeight"] as? NSNumber
+                }
+                else {
+                    message.counter = dictionary["counter"] as? NSNumber
+                    message.fromId = dictionary["fromId"] as? String
+                    message.text = dictionary["text"] as? String
+                    message.timestamp = dictionary["timestamp"] as? NSNumber
+                    message.toId = dictionary["toId"] as? String
+                }
                 
                 if let chatPartnerId = message.chatPartnerId() {
                     self.messagesDict[chatPartnerId] = message

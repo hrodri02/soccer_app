@@ -16,6 +16,7 @@ class Message: NSObject
     var text: String?
     var timestamp: NSNumber?
     var counter: NSNumber?
+    
     var imageURL: String?
     var imageWidth: NSNumber?
     var imageHeight: NSNumber?

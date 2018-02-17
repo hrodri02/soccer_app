@@ -39,7 +39,25 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
                 }
                 
                 let msg = Message()
-                msg.setValuesForKeys(dict)
+                
+                if dict["imageURL"] != nil {
+                    msg.counter = dict["counter"] as? NSNumber
+                    msg.fromId = dict["fromId"] as? String
+                    msg.text = dict["text"] as? String
+                    msg.timestamp = dict["timestamp"] as? NSNumber
+                    msg.toId = dict["toId"] as? String
+                    msg.imageURL = dict["imageURL"] as? String
+                    msg.imageWidth = dict["imageWidth"] as? NSNumber
+                    msg.imageHeight = dict["imageHeight"] as? NSNumber
+                }
+                else {
+                    msg.counter = dict["counter"] as? NSNumber
+                    msg.fromId = dict["fromId"] as? String
+                    msg.text = dict["text"] as? String
+                    msg.timestamp = dict["timestamp"] as? NSNumber
+                    msg.toId = dict["toId"] as? String
+                }
+                
                 
                 self.messages.append(msg)
                 
@@ -152,14 +170,15 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         
         setupCell(cell: cell, msg: msg)
         
-        if let text = msg.text {
-            cell?.bubbleWidthAnchor?.constant = estimatedFrameSize(text: text).width + 30
-            cell?.textView.isHidden = false
-        }
-        else if msg.imageURL != nil {
+        if msg.imageURL != nil {
             cell?.bubbleWidthAnchor?.constant = 200
             cell?.textView.isHidden = true
         }
+        else if let text = msg.text {
+            cell?.bubbleWidthAnchor?.constant = estimatedFrameSize(text: text).width + 30
+            cell?.textView.isHidden = false
+        }
+       
         
         return cell!
     }
@@ -193,11 +212,12 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var height: CGFloat = 80
         let msg = messages[indexPath.row]
-        if let txt = msg.text {
-            height = estimatedFrameSize(text: txt).height + 30
-        }
-        else if let imageWidth = msg.imageWidth?.floatValue, let imageHeight = msg.imageHeight?.floatValue {
+        
+        if let imageWidth = msg.imageWidth?.floatValue, let imageHeight = msg.imageHeight?.floatValue {
             height = CGFloat(imageHeight/imageWidth*200)
+        }
+        else if let txt = msg.text {
+            height = estimatedFrameSize(text: txt).height + 30
         }
         
         return CGSize(width: view.frame.width, height: height)
@@ -224,7 +244,7 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     }
     
     private func sendMessage(with imageURL: String, _ image: UIImage) {
-        let properties: [String:Any] = ["imageURL": imageURL, "imageWidth": image.size.width, "imageHeight": image.size.height]
+        let properties: [String:Any] = ["imageURL": imageURL, "imageWidth": image.size.width, "imageHeight": image.size.height, "text": "image sent"]
         sendMessage(with: properties)
     }
     
