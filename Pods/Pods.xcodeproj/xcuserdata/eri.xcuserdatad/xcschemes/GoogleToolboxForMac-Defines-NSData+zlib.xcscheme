@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F078729C5AF79916E17648E95D17BA48"
-               BlueprintName = "NWPusher"
+               BlueprintIdentifier = "E12BE5E7A4D6BDDADCB1B727EB254CD5"
+               BlueprintName = "GoogleToolboxForMac-Defines-NSData+zlib"
                ReferencedContainer = "container:Pods.xcodeproj"
-               BuildableName = "libNWPusher.a">
+               BuildableName = "libGoogleToolboxForMac-Defines-NSData+zlib.a">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

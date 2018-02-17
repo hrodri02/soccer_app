@@ -9,4 +9,8 @@ pod 'Firebase/Auth'
 pod 'Firebase/Messaging'
 pod 'Firebase/Storage'
 pod 'NWPusher', '~> 0.7.0'
+    target 'user_list_viewTests' do
+        inherit! :search_paths
+        pod 'Firebase'
+    end
 end
