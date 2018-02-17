@@ -44,7 +44,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         return button
     }()
     
-    func handleLoginRegister() {
+    @objc func handleLoginRegister() {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
             handleLogin()
         }
@@ -328,7 +328,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         }
     }
     
-    func handleGoogleButton()
+    @objc func handleGoogleButton()
     {
         //GIDSignIn.sharedInstance().signIn()
     
@@ -337,7 +337,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
     
   
     
-    func handleLoginRegisterChange() {
+    @objc func handleLoginRegisterChange() {
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         registerButton.setTitle(title, for: .normal)
         inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100: 150

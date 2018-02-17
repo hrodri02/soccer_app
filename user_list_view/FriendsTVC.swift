@@ -46,7 +46,7 @@ class FriendsTVC: UITableViewController
     
 
 
-    func handleFriendRequests()
+    @objc func handleFriendRequests()
     {
         let friendRequestTVC = FriendRequestsTVC()
         let navController = UINavigationController(rootViewController: friendRequestTVC)
@@ -157,7 +157,7 @@ class FriendsTVC: UITableViewController
     
     var timer: Timer?
     
-    func handleReloadTable() {
+    @objc func handleReloadTable() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })

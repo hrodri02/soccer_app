@@ -86,11 +86,11 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         return button
     }()
     
-    func handleProfilePlayButton() {
+    @objc func handleProfilePlayButton() {
         performZoomIn(imageView: profileImage)
     }
     
-    func handleZoomTap(tapGesture: UITapGestureRecognizer) {
+    @objc func handleZoomTap(tapGesture: UITapGestureRecognizer) {
         if let imageView = tapGesture.view as? UIImageView {
             
             performZoomIn(imageView: imageView)
@@ -161,7 +161,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     var avPlayer: AVPlayer?
     var avPlayerLayer: AVPlayerLayer?
-    func handlePlayButton() {
+    @objc func handlePlayButton() {
         if let videoURLStr = player?.videoURLStr, let url = URL(string: videoURLStr) {
             avPlayer = AVPlayer(url: url)
             
@@ -203,7 +203,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         }
     }
     
-    func handleZoomingOut(tapGesture: UITapGestureRecognizer)
+    @objc func handleZoomingOut(tapGesture: UITapGestureRecognizer)
     {
         if let zoomoutImageView = tapGesture.view {
             zoomoutImageView.layer.cornerRadius = 16
@@ -281,7 +281,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         return button
     }()
     
-    func handleDelete()
+    @objc func handleDelete()
     {
         let friendshipsRef = Database.database().reference().child("friendships")
         let currentUserUid = Auth.auth().currentUser?.uid
@@ -567,7 +567,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         
         if let height = player?.profileImageHeight, let width = player?.profileImageWidth  {
             
-            self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(height)/CGFloat(width))
+            self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
             self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
                                                                                     constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
             self.profileImageViewTopAnchor?.isActive = true

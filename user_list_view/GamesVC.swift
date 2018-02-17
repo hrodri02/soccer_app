@@ -179,6 +179,8 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         view.backgroundColor = .darkColor
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleAddButton))
+        
         
         map.delegate = self
         
@@ -253,7 +255,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         }, withCancel: nil)
     }
     
-    func handleReloadMap() {
+    @objc func handleReloadMap() {
         for (uid, soccerGame) in games {
             if gameExpired(soccerGame) {
                 GamesVC.gameId = uid
@@ -274,7 +276,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     }
     
     
-    func handleLogout()
+    @objc func handleLogout()
     {
         do {
             try Auth.auth().signOut()
@@ -324,7 +326,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         return nil
     }
     
-    func handleSelectAnnotationView(sender: UIGestureRecognizer)
+    @objc func handleSelectAnnotationView(sender: UIGestureRecognizer)
     {
         if let uid = sender.view?.restorationIdentifier {
             gameSelected = games[uid]
@@ -368,6 +370,16 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     }
     
     // MARK: - Navigation
+    @objc func handleAddButton() {
+        let createGameVC = CreateGameVC()
+        let navController = UINavigationController(rootViewController: createGameVC)
+        
+        guard let gameId = Auth.auth().currentUser?.uid else {return}
+        createGameVC.game = games[gameId]
+        createGameVC.map = map
+        present(navController, animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         // Get the new view controller using segue.destinationViewController.
@@ -377,15 +389,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
             if let dstVC = segue.destination.childViewControllers[0] as? GameVC
             {
                 dstVC.game = gameSelected
-            }
-        }
-        else if segue.identifier == "addGame"
-        {
-            
-            if let dstVC = segue.destination.childViewControllers[0] as? CreateGameVC {
-                guard let gameId = Auth.auth().currentUser?.uid else {return}
-                dstVC.game = games[gameId]
-                dstVC.map = map
             }
         }
     }
@@ -411,15 +414,5 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
             }
         }
     
-    }
-    
-    @IBAction func unwindFromCancel(segue:UIStoryboardSegue)
-    {
-        
-    }
-    
-    @IBAction func unwindFromCreate(segue:UIStoryboardSegue)
-    {
-       
     }
 }

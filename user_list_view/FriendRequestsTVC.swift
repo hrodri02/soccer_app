@@ -109,7 +109,7 @@ class FriendRequestsTVC: UITableViewController
         return cell!
     }
     
-    func handleAccept(_ sender: UIButton) {
+    @objc func handleAccept(_ sender: UIButton) {
         let currentUID = Auth.auth().currentUser?.uid
         let usersRef = Database.database().reference().child("users")
         let otherUID = players[sender.tag].uid
@@ -162,7 +162,7 @@ class FriendRequestsTVC: UITableViewController
         
     }
     
-    func handleDecline(_ sender: UIButton) {
+    @objc func handleDecline(_ sender: UIButton) {
         let currentUID = Auth.auth().currentUser?.uid
         let userRef = Database.database().reference().child("users").child(currentUID!)
         let uidToRemove = players[sender.tag].uid
@@ -283,7 +283,7 @@ class FriendRequestsTVC: UITableViewController
     }
     
     // MARK: - Navigation
-    func handleBack()
+    @objc func handleBack()
     {
         dismiss(animated: true, completion: nil)
     }

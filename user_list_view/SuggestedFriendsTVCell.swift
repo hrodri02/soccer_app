@@ -43,7 +43,7 @@ class SuggestedFriendsTVCell: UITableViewCell
         return button
     }()
     
-    func handleAdd()
+    @objc func handleAdd()
     {
         if addButton.titleLabel?.text == "Add Friend" {
             let currentUID = Auth.auth().currentUser?.uid

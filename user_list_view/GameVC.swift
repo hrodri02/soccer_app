@@ -193,7 +193,7 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }, withCancel: nil)
     }
     
-    func handleJoinGame()
+    @objc func handleJoinGame()
     {
         // check if the user is already part of the game
         // check the games that the user is a part of
@@ -627,12 +627,12 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     // MARK: - Navigation
-    func handleBack()
+    @objc func handleBack()
     {
         performSegue(withIdentifier: "goToGamesVC", sender: nil)
     }
     
-    func handleEdit()
+    @objc func handleEdit()
     {
         let editGameVC = EditGameVC()
         let navController = UINavigationController(rootViewController: editGameVC)

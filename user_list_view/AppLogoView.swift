@@ -72,17 +72,17 @@ class AppLogoView: UIView {
         
         // the title label tries to not stretch vertically
         titleLabel.setContentHuggingPriority(
-            UILayoutPriorityRequired,
+            UILayoutPriority.required,
             for: .vertical)
         
         // the title label tries not to shrink vertically
         titleLabel.setContentCompressionResistancePriority(
-            UILayoutPriorityRequired,
+            UILayoutPriority.required,
             for: .vertical)
         
         // the imageView tries to shrink vertically
         imageView.setContentCompressionResistancePriority(
-            UILayoutPriorityDefaultLow,
+            UILayoutPriority.defaultLow,
             for: .vertical)
     }
     

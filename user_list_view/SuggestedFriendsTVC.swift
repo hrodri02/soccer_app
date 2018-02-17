@@ -99,7 +99,7 @@ class SuggestedFriendsTVC: UITableViewController
     
     var timer: Timer?
     
-    func handleReloadTable() {
+    @objc func handleReloadTable() {
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })

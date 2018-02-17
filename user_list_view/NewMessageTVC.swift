@@ -98,7 +98,7 @@ class NewMessageTVC: UITableViewController {
     }
     
     // MARK: - Navigation
-    func handleBack() {
+    @objc func handleBack() {
         dismiss(animated: true, completion: nil)
     }
 }

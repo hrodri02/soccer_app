@@ -62,7 +62,7 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         return containerView
     }()
     
-    func handleUploadViewTap()
+    @objc func handleUploadViewTap()
     {
         let imagePickerController = UIImagePickerController()
         
@@ -206,12 +206,12 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
     private func estimatedFrameSize(text: String) -> CGRect {
         let size = CGSize(width: 200, height: 1000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16)], context: nil)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
-    func handleSend()
+    @objc func handleSend()
     {
-        let properties = ["text": inputContainerView?.inputTextField.text!] as! [String:Any]
+        let properties = ["text": (inputContainerView?.inputTextField.text)!] as [String:Any]
         sendMessage(with: properties)
     }
     
@@ -219,7 +219,7 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    func handleBack() {
+    @objc func handleBack() {
         dismiss(animated: true, completion: nil)
     }
     
@@ -305,7 +305,7 @@ class ChatLogCVC: UICollectionViewController, UICollectionViewDelegateFlowLayout
         }
     } 
     
-    func handleZoomingOut(tapGesture: UITapGestureRecognizer) {
+    @objc func handleZoomingOut(tapGesture: UITapGestureRecognizer) {
         if let zoomoutImageView = tapGesture.view {
             zoomoutImageView.layer.cornerRadius = 16
             zoomoutImageView.clipsToBounds = true

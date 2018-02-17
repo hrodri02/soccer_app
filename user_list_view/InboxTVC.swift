@@ -212,7 +212,7 @@ class InboxTVC: UITableViewController {
         self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
     }
     
-    func handleReloadTable() {
+    @objc func handleReloadTable() {
         self.messages = Array(self.messagesDict.values)
         self.messages.sort(by: { (msg1, msg2) -> Bool in
             return (msg1.timestamp?.intValue)! > (msg2.timestamp?.intValue)!
@@ -224,7 +224,7 @@ class InboxTVC: UITableViewController {
     }
     
     // MARK: - Navigation
-    func handleLogout() {
+    @objc func handleLogout() {
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
@@ -239,28 +239,9 @@ class InboxTVC: UITableViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    func handleNewMessage() {
+    @objc func handleNewMessage() {
         let newMessageTVC = NewMessageTVC()
         let navController = UINavigationController(rootViewController: newMessageTVC)
         present(navController, animated: true, completion: nil)
     }
-    
-    @IBAction func unwindFromBack(segue:UIStoryboardSegue)
-    {
-        
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier == "goToChatLogCVC"
-        {
-            let navc = segue.destination as! UINavigationController
-            let destVC = navc.viewControllers.first as? ChatLogCVC
-            let user = users[(tableView.indexPathForSelectedRow?.row)!]
-            destVC?.user = user
-        }
-    }
-
 }

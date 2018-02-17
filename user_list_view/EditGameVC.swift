@@ -17,6 +17,7 @@ class EditGameVC: UIViewController
     // MARK: - member variables
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
+    
     var game: Game?
     var addr: String?
     var coor: CLLocationCoordinate2D?
@@ -63,7 +64,7 @@ class EditGameVC: UIViewController
         return slider
     }()
     
-    func handleSliderChange()
+    @objc func handleSliderChange()
     {
         let splitSliderValue = modf(slider.value)
         var hours = Int(splitSliderValue.0)
@@ -309,12 +310,12 @@ class EditGameVC: UIViewController
     }
     
     // MARK: - Navigation
-    func handleBack()
+    @objc func handleBack()
     {
         dismiss(animated: true, completion: nil)
     }
     
-    func handleDelete()
+    @objc func handleDelete()
     {
         EditGameVC.gameId = (game?.identifier)!
         EditGameVC.getPlayersList((game?.identifier)!)
@@ -327,7 +328,7 @@ class EditGameVC: UIViewController
         dismiss(animated: true, completion: nil)
     }
     
-    func handleDone()
+    @objc func handleDone()
     {
         // get start time of game
         handleDatePickerOnButtonPress(datePicker)

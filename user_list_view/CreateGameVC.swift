@@ -14,13 +14,6 @@ import GooglePlaces
 
 class CreateGameVC: UIViewController
 {
-    @IBOutlet weak var setGameDetailsLabel: UILabel!
-    @IBOutlet weak var gameDurationLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var createGameButton: UIButton!
-    @IBOutlet weak var datePicker: UIDatePicker!
-    
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     
@@ -31,44 +24,88 @@ class CreateGameVC: UIViewController
     var startTime: String?
     var durHours: Int?
     var durMins: Int?
+    var subView: UIView?
     var player = Player()
     
-    func setupLabels()
-    {
-        //setGameDetailsLabel.textColor = UIColor(r:0, g: 200, b:0)
-        gameDurationLabel.textColor = UIColor.white
-        timeLabel.textColor = .superLightColor
-        timeLabel.text = "0 h 30 m"
-    }
+    // MARK: - UI components
+    let gameDurationLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = UIColor.white
+        label.text = "Game Duration"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
-    func setupCreateButton()
-    {
-        createGameButton.setTitleColor(.superLightColor, for: .normal)
-        createGameButton.backgroundColor = .lightColor
-        createGameButton.layer.cornerRadius = 10
-    }
+    let timeLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = .superLightColor
+        label.text = "0 h 30 m"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
-    func setupSlider()
-    {
+    let slider: UISlider = {
+        var slider = UISlider()
         slider.minimumTrackTintColor = .superLightColor
         slider.value = 0
+        slider.maximumValue = 4.0
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.addTarget(self, action: #selector(handleSliderChange), for: .valueChanged)
+        return slider
+    }()
+    
+    @objc func handleSliderChange()
+    {
+        let splitSliderValue = modf(slider.value)
+        var hours = Int(splitSliderValue.0)
+        let decimal = splitSliderValue.1
+        
+        var mins: Int = 0
+        
+        if (decimal < 0.5) {
+            if hours != 4 {
+                mins =  30
+            }
+        }
+        else {
+            hours += 1
+            mins = 0
+        }
+        
+        timeLabel.text = "\(hours) h \(mins) m"
     }
     
-    func setupDatePicker()
-    {
-        datePicker.setValue(UIColor.white, forKey: "textColor")
-        datePicker.datePickerMode = UIDatePickerMode.time  // show the time in date picker only
-        
-        // set the minimum date to today's date
-        let date = Date()
-        datePicker.minuteInterval = 15
-        datePicker.minimumDate = date
-    }
+    lazy var createGameButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .lightColor
+        button.setTitle("Create Game", for: .normal)
+        button.setTitleColor(.superLightColor, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 20
+        button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(handleCreateGame), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var datePicker: UIDatePicker = {
+        var picker = UIDatePicker()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.setValue(UIColor.white, forKey: "textColor")
+        picker.datePickerMode = UIDatePickerMode.time  // show the time in date picker only
+        picker.minuteInterval = 15  // set the minimum date to today's date
+        picker.minimumDate = Date()
+        return picker
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .darkColor
         navigationItem.title = "Create Game"
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<", style: .plain, target: self, action: #selector(handleBack))
         
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
@@ -79,9 +116,9 @@ class CreateGameVC: UIViewController
         searchController?.searchBar.barTintColor = .lightColor
         searchController?.searchBar.tintColor = .superLightColor
         
-        let subView = UIView(frame: CGRect(x: 0, y: 65.0, width: view.frame.width, height: view.frame.height/4))
-        subView.addSubview((searchController?.searchBar)!)
-        view.addSubview(subView)
+        subView = UIView(frame: CGRect(x: 0, y: 65.0, width: view.frame.width, height: view.frame.height/8))
+        subView?.addSubview((searchController?.searchBar)!)
+        view.addSubview(subView!)
  
         searchController?.searchBar.sizeToFit()
         searchController?.hidesNavigationBarDuringPresentation = false
@@ -90,13 +127,62 @@ class CreateGameVC: UIViewController
         // this view controller, not one further up the chain.
         definesPresentationContext = true
         
+        view.addSubview(gameDurationLabel)
+        view.addSubview(timeLabel)
+        view.addSubview(slider)
+        view.addSubview(datePicker)
+        view.addSubview(createGameButton)
+        
         downloadPlayerInfo()
-        setupLabels()
+        setupGameDurationLabel()
+        setupTimeLabel()
         setupSlider()
-        setupCreateButton()
         setupDatePicker()
+        setupCreateGameButton()
     }
     
+    // MARK: - setup constraints for UI components
+    func setupGameDurationLabel()
+    {
+        gameDurationLabel.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 12).isActive = true
+        gameDurationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+        gameDurationLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        gameDurationLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
+    }
+    
+    func setupTimeLabel()
+    {
+        timeLabel.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 12).isActive = true
+        timeLabel.leftAnchor.constraint(equalTo: gameDurationLabel.rightAnchor, constant: 20).isActive = true
+        timeLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        timeLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
+    }
+    
+    func setupSlider()
+    {
+        slider.topAnchor.constraint(equalTo: gameDurationLabel.bottomAnchor, constant: 12).isActive = true
+        slider.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+        slider.widthAnchor.constraint(equalToConstant: view.frame.width - 20).isActive = true
+        slider.heightAnchor.constraint(equalToConstant: slider.frame.height).isActive = true
+    }
+    
+    func setupDatePicker()
+    {
+        datePicker.topAnchor.constraint(equalTo: (subView?.bottomAnchor)!).isActive = true
+        datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        datePicker.widthAnchor.constraint(equalToConstant: view.frame.width/2).isActive = true
+        datePicker.heightAnchor.constraint(equalToConstant: view.frame.height/4).isActive = true
+    }
+    
+    func setupCreateGameButton()
+    {
+        createGameButton.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: 12).isActive = true
+        createGameButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        createGameButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        createGameButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    // MARK: - Button press functions
     func handleDatePickerOnButtonPress(_ sender: UIDatePicker) {
         
         // Create date formatter
@@ -133,34 +219,13 @@ class CreateGameVC: UIViewController
         }
     }
     
-    @IBAction func sliderChange(_ sender: Any)
-    {
-        let splitSliderValue = modf(slider.value)
-        var hours = Int(splitSliderValue.0)
-        let decimal = splitSliderValue.1
-        
-        print(slider.value)
-        
-        var mins: Int = 0
-        
-        if (decimal < 0.5) {
-            if hours != 4 {
-                mins =  30
-            }
-        }
-        else {
-            hours += 1
-            mins = 0
-        }
-        
-        timeLabel.text = "\(hours) h \(mins) m"
-    }
-    
+    /*
     @IBAction func dissmissErrorMessage(_ sender: Any) {
         
     }
+    */
     
-    @IBAction func createGameButtonPressed(_ sender: Any) {
+    @objc func handleCreateGame() {
         let currentUID = Auth.auth().currentUser?.uid
         let userRef = Database.database().reference().child("users").child(currentUID!)
         
@@ -176,18 +241,22 @@ class CreateGameVC: UIViewController
             game?.numPlayers = 0
             game?.identifier = currentUID
             addGameToDB(game: game!)
+            
+            // update the games created by current user
+            player.gamesCreated! += 1
+            let values = ["gamesCreated": player.gamesCreated!]
+            userRef.updateChildValues(values) { (err, _) in
+                if err != nil {
+                    print(err!)
+                }
+                
+                let dstVC = self.presentingViewController?.childViewControllers[0].childViewControllers[0] as? GamesVC
+                dstVC?.newGame = self.game
+                self.dismiss(animated: true, completion: nil)
+            }
         }
         else {
             createAlert(title: "Error", msg: "Please enter a location")
-        }
-        
-        // update the games created by current user
-        player.gamesCreated! += 1
-        let values = ["gamesCreated": player.gamesCreated!]
-        userRef.updateChildValues(values) { (err, _) in
-            if err != nil {
-                print(err!)
-            }
         }
     }
     
@@ -201,14 +270,15 @@ class CreateGameVC: UIViewController
         present(alert, animated: true, completion: nil)
     }
     
+    // MARK: - Database functions
     func addGameToDB(game: Game)
     {
         let ref = Database.database().reference()
         let currentUID = Auth.auth().currentUser?.uid
         let gamesRef = ref.child("games").child(currentUID!)
         
-        let values = ["startTime": "\(game.startTime!)", "durationHours": "\(game.durationHours!)", "durationMins": "\(game.durationMins!)",
-            "address": game.address, "numPlayers": "0"]
+        let values = ["startTime": "\((game.startTime)!)", "durationHours": "\((game.durationHours)!)", "durationMins": "\((game.durationMins)!)",
+        "address": (game.address)!, "numPlayers": "0"] as [String:Any]
         
         gamesRef.updateChildValues(values) { (err, ref) in
             if err != nil {
@@ -235,26 +305,9 @@ class CreateGameVC: UIViewController
     }
   
     // MARK: - Navigation
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "unwindFromCreate"
-        {
-            if game != nil {
-                return true
-            }
-            return false
-        }
-        return true
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier == "unwindFromCreate"
-        {
-            let destVC = segue.destination as? GamesVC
-            destVC?.newGame = self.game
-        }
+    @objc func handleBack()
+    {
+        dismiss(animated: true, completion: nil)
     }
 }
 

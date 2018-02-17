@@ -19,7 +19,7 @@ class FriendsVC: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "friend_requests"), style: .plain, target: self, action: #selector(handleFriendRequests))
     }
     
-    func handleFriendRequests()
+    @objc func handleFriendRequests()
     {
         print("friend request button pressed")
     }

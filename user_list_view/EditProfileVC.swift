@@ -113,7 +113,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         return button
     }()
     
-    func handleUpdateProfile()
+    @objc func handleUpdateProfile()
     {
         let profileVC = presentingViewController?.childViewControllers[1].childViewControllers[0] as? ProfileVC
         
@@ -134,7 +134,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
     
     let blackView = UIView()
     
-    func handlePositionButton()
+    @objc func handlePositionButton()
     {
         blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
         
@@ -163,7 +163,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         }
     }
     
-    func handleExperienceButton()
+    @objc func handleExperienceButton()
     {
         blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
         
@@ -192,7 +192,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         }
     }
     
-    func handleDismiss()
+    @objc func handleDismiss()
     {
         UIView.animate(withDuration: 0.5) { 
             self.blackView.alpha = 0
@@ -201,7 +201,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         }
     }
     
-    func handleBack()
+    @objc func handleBack()
     {
         dismiss(animated: true, completion: nil)
     }

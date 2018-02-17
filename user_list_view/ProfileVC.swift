@@ -32,12 +32,12 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         let uid = Auth.auth().currentUser?.uid
         let userRef = ref.child("users").child(uid!)
         
-        let value = ["favClubTeam": player?.favClubTeam!]
+        let value = ["favClubTeam": (player?.favClubTeam)!] as [String:Any]
         
         userRef.updateChildValues(value) { (error, ref) in
             
             if error != nil {
-                print("error:", error)
+                print("error:", error!)
                 return
             }
             
@@ -59,7 +59,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         let uid = Auth.auth().currentUser?.uid
         let userRef = ref.child("users").child(uid!)
         
-        let value = ["position": player?.position!]
+        let value = ["position": (player?.position)!] as [String:Any]
         
         userRef.updateChildValues(value) { (error, ref) in
             
@@ -85,7 +85,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         let uid = Auth.auth().currentUser?.uid
         let userRef = ref.child("users").child(uid!)
         
-        let value = ["experience": player?.experience!]
+        let value = ["experience": (player?.experience)!] as [String:Any]
         
         userRef.updateChildValues(value) { (error, ref) in
             
@@ -132,11 +132,11 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         return view
     }()
     
-    func handleProfilePlayButton() {
+    @objc func handleProfilePlayButton() {
         performZoomIn(imageView: profileImage)
     }
     
-    func handleZoomTap(tapGesture: UITapGestureRecognizer) {
+    @objc func handleZoomTap(tapGesture: UITapGestureRecognizer) {
         if let imageView = tapGesture.view as? UIImageView {
             
             performZoomIn(imageView: imageView)
@@ -207,7 +207,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     
     var avPlayer: AVPlayer?
     var avPlayerLayer: AVPlayerLayer?
-    func handlePlayButton() {
+    @objc func handlePlayButton() {
         if let videoURLStr = player?.videoURLStr, let url = URL(string: videoURLStr) {
             avPlayer = AVPlayer(url: url)
             
@@ -245,7 +245,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         }
     }
     
-    func handleZoomingOut(tapGesture: UITapGestureRecognizer)
+    @objc func handleZoomingOut(tapGesture: UITapGestureRecognizer)
     {
         if let zoomoutImageView = tapGesture.view {
             zoomoutImageView.layer.cornerRadius = 16
@@ -289,7 +289,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         return imageView
     }()
     
-    func handleSelectBackgroundImageView()
+    @objc func handleSelectBackgroundImageView()
     {
         let picker = UIImagePickerController()
         picker.delegate = self
@@ -298,7 +298,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         present(picker, animated: true, completion: nil)
     }
     
-    func handleSelectProfileImageView()
+    @objc func handleSelectProfileImageView()
     {
         let picker = UIImagePickerController()
         
@@ -742,7 +742,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 
                 if let height = self.player?.profileImageHeight, let width = self.player?.profileImageWidth  {
                     
-                    self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(height)/CGFloat(width))
+                    self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
                     self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
                                                                                             constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
                     self.profileImageViewTopAnchor?.isActive = true
@@ -822,7 +822,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         }
     }
     
-    func handleEditProfile()
+    @objc func handleEditProfile()
     {
         let editProfileVC = EditProfileVC()
         let navController = UINavigationController(rootViewController: editProfileVC)
@@ -987,7 +987,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         positionLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
     }
     
-    func handleLogout() {
+    @objc func handleLogout() {
         do {
             try Auth.auth().signOut()
         } catch let logoutError {
