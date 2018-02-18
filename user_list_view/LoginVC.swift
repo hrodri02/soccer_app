@@ -124,10 +124,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 return
             }
             
-            guard let uid = user?.uid else
-            {
-                return
-            }
+            guard let uid = user?.uid else {return}
             
             // successfully authenticated user
             self.player = Player()
@@ -136,7 +133,13 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
             
             let ref = Database.database().reference()
             let usersRef = ref.child("users").child(uid)
+            let userRef = Database.database().reference().child("users").child(uid)
             let values = ["name": name, "email": email]
+            
+            guard let token = InstanceID.instanceID().token() else {return}
+            let tokenValue = [token:true]
+            let notificationRef = userRef.child("deviceToken")
+            notificationRef.updateChildValues(tokenValue)
             
             usersRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
                 
@@ -303,10 +306,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                     let values = ["name": (user?.displayName)!, "email": (user?.email)!] as [String:Any]
                     
                     guard let token = InstanceID.instanceID().token() else {return}
-                    
                     let tokenValue = [token:true]
                     let notificationRef = userRef.child("deviceToken")
-                    
                     notificationRef.updateChildValues(tokenValue)
                     
                     userRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
