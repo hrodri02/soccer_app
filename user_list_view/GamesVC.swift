@@ -10,7 +10,6 @@ import UIKit
 import MapKit
 import CoreLocation
 import Firebase
-import UserNotifications
 
 class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
 {
@@ -179,7 +178,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         view.backgroundColor = .darkColor
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(handleAddButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Game", style: .plain, target: self, action: #selector(handleAddButton))
         
         
         map.delegate = self
@@ -191,17 +190,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         downloadGames()
         
         observeGames()
-        
-        // request authorization to send notifications
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-            if granted {
-                print("notification access granted")
-            }
-            else
-            {
-                print((error?.localizedDescription)!)
-            }
-        }
         
         self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
     }

@@ -27,7 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         GMSServices.provideAPIKey(GoogleAPIKey)
         
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
-        //GIDSignIn.sharedInstance().delegate = self
         
         UISearchBar.appearance().barTintColor = UIColor(r:0,g:90,b:0)
         UISearchBar.appearance().tintColor = UIColor(r:0,g:200,b:0)
@@ -59,23 +58,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         }
     }
     
-    
-    var regToken = String()
     func application(_ application: UIApplication,
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        
-        /*
-        if let tok =  InstanceID.instanceID().token() {
-            regToken = tok
-            print("reg token", regToken)
-        }
-         */
         Messaging.messaging().apnsToken = deviceToken
         var token = ""
-        for i in 0..<deviceToken.count {
+        for i in 0..<deviceToken.count
+        {
             token = token + String(format: "%02.2hhx", arguments: [deviceToken[i]])
         }
-        print(token)
     }
   
     /*
@@ -86,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
     }
-  */
+    */
     
     
     func application(_ application: UIApplication,

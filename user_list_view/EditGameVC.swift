@@ -442,19 +442,7 @@ extension EditGameVC: GMSAutocompleteResultsViewControllerDelegate {
         
         searchController?.searchBar.text = place.name
         addr = place.name
-        
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(place.formattedAddress!) { (placemarks, error) in
-            if error != nil {
-                print(error!)
-            }
-            
-            if let placemark = placemarks?.first
-            {
-                self.coor = (placemark.location?.coordinate)!
-            }
-        }
-        
+        coor = place.coordinate
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

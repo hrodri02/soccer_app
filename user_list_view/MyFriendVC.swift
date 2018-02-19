@@ -190,11 +190,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         if keyPath == #keyPath(AVPlayer.rate) {
             
             if let rate = self.avPlayer?.rate {
-                if rate > 0 {
-                    print("rate is > 0:", rate)
-                }
-                else {
-                    print("rate is 0:", rate)
+                if rate == 0 {
                     avPlayerLayer?.removeFromSuperlayer()
                     activityIndicatorView.stopAnimating()
                     playButton.isHidden = false
@@ -300,32 +296,6 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
             self.navigationController?.popViewController(animated: true)
         })
     }
-    
-    /*
-    private func storeDefaultProfileImage()
-    {
-        // add png to name of image and uses this as the name of image
-        let storageRef = Storage.storage().reference().child("defaultProfileImage.png")
-        
-        // uploading image to storage
-        if let uploadData = UIImagePNGRepresentation(UIImage(named: "soccer_player")!)
-        {
-            storageRef.putData(uploadData, metadata: nil, completion:
-                { (metadata, error) in
-                    if error != nil
-                    {
-                        print(error!)
-                        return
-                    }
-                    
-                    if let imageURL = metadata?.downloadURL()?.absoluteString
-                    {
-                        self.registerUserImageURLIntoDatabase(imageURL: imageURL)
-                    }
-            })
-        }
-    }
-    */
     
     let nameLabel: UILabel = {
         var label = UILabel()

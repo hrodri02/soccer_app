@@ -62,14 +62,14 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             
             if error != nil {
-                print(error!)
-                self.createAlert(title: "Error", msg: "The password or email is invalid!")
+                self.createAlert(title: "Error", msg: "The password or email is invalid!");
                 return
             }
             
             // successfully logged in user
             self.downloadUserData()
         }
+        
     }
     
     func createAlert(title: String, msg: String) {
@@ -84,10 +84,10 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
     
     func downloadUserData()
     {
-        let uid = Auth.auth().currentUser?.uid
+        guard let uid = Auth.auth().currentUser?.uid else {return}
         self.player?.uid = uid
         
-        Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             self.player = Player()
             if let dictionary = snapshot.value as? [String: AnyObject]
@@ -336,8 +336,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
        
     }
     
-  
-    
     @objc func handleLoginRegisterChange() {
         let title = loginRegisterSegmentedControl.titleForSegment(at: loginRegisterSegmentedControl.selectedSegmentIndex)
         registerButton.setTitle(title, for: .normal)
@@ -455,9 +453,15 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         googleSigninButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
+    // MARK: - Keyboard functions
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleLoginRegister()
         return true
+    }
+    
+    // hide the keyboard when the user touches outisde keyboard
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
     // MARK: - Navigation
