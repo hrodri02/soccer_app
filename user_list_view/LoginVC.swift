@@ -267,10 +267,14 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         Messaging.messaging().delegate = self
     }
     
-    var registrationToken = String()
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        print("Firebase registration token: \(fcmToken)")
-        registrationToken =  fcmToken
+        let registrationToken =  fcmToken
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let userRef = Database.database().reference().child("users").child(uid)
+        let tokenValue = [registrationToken:true]
+        let notificationRef = userRef.child("deviceToken")
+        notificationRef.updateChildValues(tokenValue)
         
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
