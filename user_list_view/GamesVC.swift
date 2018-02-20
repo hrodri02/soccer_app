@@ -234,7 +234,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                 }
             }
             else {
-                print("removing game with no players")
                 // removes game from map
                 self.removeAnnotation(game)
                 self.games[gameId] = nil
@@ -344,8 +343,8 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         
         var mapRegion = MKCoordinateRegion()
         mapRegion.center = userLocation.coordinate
-        mapRegion.span.latitudeDelta = 0.01
-        mapRegion.span.longitudeDelta = 0.01
+        mapRegion.span.latitudeDelta = 0.1
+        mapRegion.span.longitudeDelta = 0.1
         map.setRegion(mapRegion, animated: true)
         
         self.map.showsUserLocation = true

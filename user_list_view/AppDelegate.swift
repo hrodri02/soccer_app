@@ -67,73 +67,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             token = token + String(format: "%02.2hhx", arguments: [deviceToken[i]])
         }
     }
-  
-    /*
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        print("Firebase registration token: \(fcmToken)")
-        registrationToken =  fcmToken
-        
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }
-    */
-    
     
     func application(_ application: UIApplication,
                      didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register: \(error)")
     }
     
-    /*
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        
-        if (error != nil) {
-            print("could not login into google", error!)
-            return
-        }
-        
-        print("successfuly logged into google", user)
-        
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        
-        Auth.auth().signIn(with: credential) { (user, error) in
-            if let err = error {
-                print("Failed to create a firebase user with a Google account", err)
-                return
-            }
-            
-            guard let uid = user?.uid else {return}
-            
-            let ref = Database.database().reference().child("users").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                if !(snapshot.exists()) {
-                
-                    let userRef = Database.database().reference().child("users").child(uid)
-                    let values = ["name": (user?.displayName)!, "email": (user?.email)!] as [String:Any]
-                    let tokenValue = [self.registrationToken:true]
-                    
-                    let notificationRef = userRef.child("deviceToken")
-                    
-                    notificationRef.updateChildValues(tokenValue)
-                    
-                    userRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
-                        
-                        if err != nil {
-                            return
-                        }
-                        
-                        // Saved user successfully into firebase db
-                       
-                        
-                    })
-                }
-            }, withCancel: nil)
-        }
-        
-    }
-    */
     @available(iOS 9.0, *)
     func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
         -> Bool {

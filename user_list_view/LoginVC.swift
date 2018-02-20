@@ -65,6 +65,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 self.createAlert(title: "Error", msg: "The password or email is invalid!");
                 return
             }
+            let token = InstanceID.instanceID().token()
+            self.saveTokenInDB(token ?? "")
             
             // successfully logged in user
             self.downloadUserData()
@@ -133,13 +135,10 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
             
             let ref = Database.database().reference()
             let usersRef = ref.child("users").child(uid)
-            let userRef = Database.database().reference().child("users").child(uid)
             let values = ["name": name, "email": email]
             
-            guard let token = InstanceID.instanceID().token() else {return}
-            let tokenValue = [token:true]
-            let notificationRef = userRef.child("deviceToken")
-            notificationRef.updateChildValues(tokenValue)
+            let token = InstanceID.instanceID().token()
+            self.saveTokenInDB(token ?? "")
             
             usersRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
                 
@@ -239,7 +238,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
     let googleSigninButton: GIDSignInButton = {
         let button = GIDSignInButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(handleGoogleButton), for: .touchUpInside)
         return button
     }()
     
@@ -267,27 +265,30 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         Messaging.messaging().delegate = self
     }
     
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        let registrationToken =  fcmToken
+    func saveTokenInDB(_ token: String)
+    {
+        if token == "" {
+            return
+        }
         
         guard let uid = Auth.auth().currentUser?.uid else {return}
         let userRef = Database.database().reference().child("users").child(uid)
-        let tokenValue = [registrationToken:true]
+        let tokenValue = [token:true]
         let notificationRef = userRef.child("deviceToken")
-        notificationRef.updateChildValues(tokenValue)
-        
-        // TODO: If necessary send token to application server.
+        notificationRef.setValue(tokenValue)
+    }
+    
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         // Note: This callback is fired at each app startup and whenever a new token is generated.
+        saveTokenInDB(fcmToken)
     }
     
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if (error != nil) {
+        if error != nil {
             print("could not login into google", error!)
             return
         }
-        
-        print("successfuly logged into google", user)
         
         guard let authentication = user.authentication else { return }
         let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
@@ -299,22 +300,17 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 return
             }
             
-            
+            let token = InstanceID.instanceID().token()
             guard let uid = user?.uid else {return}
             
             let ref = Database.database().reference().child("users").child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 if !(snapshot.exists()) {
-                    
-                    let userRef = Database.database().reference().child("users").child(uid)
                     let values = ["name": (user?.displayName)!, "email": (user?.email)!] as [String:Any]
                     
-                    guard let token = InstanceID.instanceID().token() else {return}
-                    let tokenValue = [token:true]
-                    let notificationRef = userRef.child("deviceToken")
-                    notificationRef.updateChildValues(tokenValue)
+                    self.saveTokenInDB(token ?? "")
                     
-                    userRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                    ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
                         
                         if err != nil {
                             return
@@ -326,18 +322,12 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                     })
                 }
                 else {
+                    self.saveTokenInDB(token ?? "")
                     self.performSegue(withIdentifier: "goToGamesVC", sender: self)
                 }
             }, withCancel: nil)
             
         }
-    }
-    
-    @objc func handleGoogleButton()
-    {
-        //GIDSignIn.sharedInstance().signIn()
-    
-       
     }
     
     @objc func handleLoginRegisterChange() {
