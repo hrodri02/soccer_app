@@ -220,7 +220,6 @@ class EditGameVC: UIViewController
         durHours = Int(splitSliderValue.0)
         let decimal = splitSliderValue.1
         
-        print(slider.value)
         durMins = 0
         
         if (decimal < 0.5) {
@@ -337,6 +336,7 @@ class EditGameVC: UIViewController
         handleSliderValueOnButtonPress(slider)
         
         if let coordinate = coor {
+            game = Game()
             game?.address = addr
             game?.durationHours = durHours
             game?.durationMins = durMins
@@ -363,9 +363,12 @@ class EditGameVC: UIViewController
             }
                 
             addGameToDB(game: game!)
+            
+            
             if let presenter = presentingViewController?.childViewControllers[0] as? GameVC {
                 presenter.game = game
             }
+            
             dismiss(animated: true, completion: nil)
         
         }

@@ -35,18 +35,13 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     var canUserJoinGame: Bool? {
         didSet {
             if canUserJoinGame! {
-                print("usr is not part of game")
                 addUserToGame()
-            }
-            else {
-                print("usr is part of game")
             }
         }
     }
     
     var gamesList: [String]? {
         didSet {
-            print("list of games that user is a part of have been downloaded")
             print(gamesList!)
             calcExpirationDates()
         }
@@ -54,14 +49,12 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     var playersDict: [String:Bool]? {
         didSet {
-            print("list of players that are part of the game have been downloaded")
             downloadPlayersInfo()
         }
     }
     
     var expirationDates: [(Date,Date)]? {
         didSet {
-            print("expirations dates have been calculated")
             print(expirationDates!)
             isUserPartOfGame()
         }
@@ -240,7 +233,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 if err != nil {
                     return
                 }
-                print("added player")
                 // saved game information into firebase db
             }
             
@@ -252,7 +244,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 if err != nil {
                     return
                 }
-                print("added game to game list of player")
             }
             
             updateGamesPlayedByUser(-1)
@@ -322,11 +313,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         self.expirationDates = tempArray
                     }
                 }
-                else {
-                    // no players are part of the game
-                    print("No players are part of this game")
-                    
-                }
             }, withCancel: nil)
         }
     }
@@ -368,8 +354,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if canJoinGame {
                 // check if the user is already part of the game
                 if let dict = snapshot.value as? [String:Bool] {
-                    print(dict)
-                    
                     if let isUsrPartOfGame = dict[currentUID!] {
                         // NOTE: don't think this will ever execute but I will leave it for now
                         self.canUserJoinGame = !isUsrPartOfGame
@@ -458,7 +442,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if err != nil {
                 return
             }
-            print("added game to game list of player")
         }
         
         updateGamesPlayedByUser(1)
@@ -498,11 +481,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsTVCell", for: indexPath) as? FriendsTVCell
         
         let player: Player = players[indexPath.row]
-        
-        print(players)
-        
-        print(indexPath.row)
-        print(player.uid!)
         
         if player.profileImageURLStr != nil {
             cell?.profileImage.loadImageUsingCacheWithURLStr(urlStr: player.profileImageURLStr!)

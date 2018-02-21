@@ -191,12 +191,40 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         
         observeGames()
         
-        self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
+        //self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
     }
     
     func observeGames()
     {
         let ref = Database.database().reference().child("games")
+        
+        ref.observe(.childChanged, with: { (snapshot) in
+            
+            let gameId = snapshot.key
+            let oldAddress = self.games[gameId]?.address
+          
+            if let gameDict = snapshot.value as? [String:Any] {
+                let newNumPlayers = gameDict["numPlayers"] as? String
+                let newAddress = gameDict["address"] as? String
+                let newStartTime = gameDict["startTime"] as? String
+                let newDurationMins = gameDict["durationMins"] as? String
+                let newDurationHours = gameDict["durationHours"] as? String
+                
+                if oldAddress != newAddress {
+                    self.removeAnnotation(self.games[gameId])
+                    self.games[gameId] = Game()
+                    self.games[gameId]?.address = newAddress
+                    self.annotateLocation(self.games[gameId]!)
+                }
+                
+                self.games[gameId]?.identifier = gameId
+                self.games[gameId]?.numPlayers = Int(newNumPlayers!)
+                self.games[gameId]?.startTime = newStartTime
+                self.games[gameId]?.durationMins = Int(newDurationMins!)
+                self.games[gameId]?.durationHours = Int(newDurationHours!)
+                
+            }
+        }, withCancel: nil)
         
         ref.observe(.childRemoved, with: { (snapshot) in
             let gameId = snapshot.key
@@ -383,10 +411,13 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     @IBAction func unwindFromGameVC(segue:UIStoryboardSegue)
     {
         // O(1): update the number players of the game selected
+        /*
         if let uid = gameSelected?.identifier {
             games[uid]?.numPlayers = gameSelected?.numPlayers
         }
+        */
         
+        /*
         if let srcVC = segue.source as? GameVC {
             if srcVC.game == nil {
                 removeAnnotation(gameSelected)
@@ -400,6 +431,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                 }
             }
         }
-    
+        */
     }
 }
