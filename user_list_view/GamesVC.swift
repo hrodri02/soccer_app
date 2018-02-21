@@ -378,6 +378,11 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         self.map.showsUserLocation = true
         
         manager.stopUpdatingLocation()
+        
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let coorRef = Database.database().reference().child("users").child(uid).child("coordinate")
+        let value = ["lat": userLocation.coordinate.latitude, "lon": userLocation.coordinate.longitude] as [String:Any]
+        coorRef.updateChildValues(value)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

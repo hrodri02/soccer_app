@@ -277,8 +277,10 @@ class CreateGameVC: UIViewController
         let currentUID = Auth.auth().currentUser?.uid
         let gamesRef = ref.child("games").child(currentUID!)
         
-        let values = ["startTime": "\((game.startTime)!)", "durationHours": "\((game.durationHours)!)", "durationMins": "\((game.durationMins)!)",
-        "address": (game.address)!, "numPlayers": "0"] as [String:Any]
+        let values = ["startTime": "\((game.startTime)!)", "durationHours": "\((game.durationHours)!)",
+                      "durationMins": "\((game.durationMins)!)", "address": (game.address)!,
+                      "numPlayers": "0", "lat": (game.coordinate.latitude),
+                      "lon": (game.coordinate.longitude)] as [String:Any]
         
         gamesRef.updateChildValues(values) { (err, ref) in
             if err != nil {
