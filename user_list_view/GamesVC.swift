@@ -197,6 +197,35 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     func observeGames()
     {
         let ref = Database.database().reference().child("games")
+        // TODO: adds duplicates
+        ref.observe(.childAdded, with: { (snapshot) in
+            guard let uid = Auth.auth().currentUser?.uid else {return}
+            let gameId = snapshot.key
+            
+            if gameId == uid {
+                return
+            }
+            
+            if let gameDict = snapshot.value as? [String:Any] {
+                let numPlayers = gameDict["numPlayers"] as? String
+                let address = gameDict["address"] as? String
+                let startTime = gameDict["startTime"] as? String
+                let durationMins = gameDict["durationMins"] as? String
+                let durationHours = gameDict["durationHours"] as? String
+                
+                self.games[gameId] = Game()
+                
+                self.games[gameId]?.address = address
+                self.annotateLocation(self.games[gameId]!)
+                
+                self.games[gameId]?.identifier = gameId
+                self.games[gameId]?.numPlayers = Int(numPlayers!)
+                self.games[gameId]?.startTime = startTime
+                self.games[gameId]?.durationMins = Int(durationMins!)
+                self.games[gameId]?.durationHours = Int(durationHours!)
+                
+            }
+        }, withCancel: nil)
         
         ref.observe(.childChanged, with: { (snapshot) in
             

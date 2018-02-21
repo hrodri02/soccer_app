@@ -245,8 +245,9 @@ class EditGameVC: UIViewController
         let currentUID = Auth.auth().currentUser?.uid
         let gamesRef = ref.child("games").child(currentUID!)
         
-        let values = ["startTime": "\(game.startTime!)", "durationHours": "\(game.durationHours!)", "durationMins": "\(game.durationMins!)",
-        "address": (game.address)!] as [String:Any]
+        let values = ["startTime": "\((game.startTime)!)", "durationHours": "\((game.durationHours)!)",
+            "durationMins": "\((game.durationMins)!)", "address": (game.address)!, "lat": (game.coordinate.latitude),
+            "lon": (game.coordinate.longitude)] as [String:Any]
         
         gamesRef.updateChildValues(values) { (err, ref) in
             if err != nil {
@@ -363,7 +364,6 @@ class EditGameVC: UIViewController
             }
                 
             addGameToDB(game: game!)
-            
             
             if let presenter = presentingViewController?.childViewControllers[0] as? GameVC {
                 presenter.game = game
