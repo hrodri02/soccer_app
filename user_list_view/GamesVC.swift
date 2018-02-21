@@ -25,19 +25,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     var oldAddress: String?
     var oldCoordinate: CLLocationCoordinate2D?
     
-    var newGame: Game? {
-        didSet {
-            games[(newGame?.identifier)!] = newGame
-            annotateLocation(newGame!)
-        }
-    }
-    
-    var gamesInDB: [String:AnyObject]? {
-        didSet {
-            createGamesFromDict(gamesInDB!)
-        }
-    }
-    
     private static var gameId: String?
     
     static var playersOfGame: [String:Bool]? {
@@ -47,46 +34,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     }
     
     var timer: Timer?
-    
-    // O(N): have to go through all games in DB to check if they are expired
-    func createGamesFromDict(_ dictionary: [String:AnyObject])
-    {
-        var pin: Game?
-        for (uid, soccerGame) in dictionary {
-            
-            let gameDict = soccerGame as! [String:AnyObject]
-            
-            pin = Game()
-            pin?.identifier = uid
-            pin?.address = gameDict["address"] as? String
-            
-            let durationHours = gameDict["durationHours"] as? String
-            pin?.durationHours = Int(durationHours!)
-            
-            let durationMins = gameDict["durationMins"] as? String
-            pin?.durationMins = Int(durationMins!)
-            
-            let startTime = gameDict["startTime"] as? String
-            pin?.startTime = startTime
-            
-            let numPlayers = gameDict["numPlayers"] as? String
-            pin?.numPlayers = Int(numPlayers!)
-            
-            if gameExpired(pin) {
-                GamesVC.gameId = uid
-                GamesVC.getPlayersList(uid)
-            }
-            else {
-                games[uid] = pin
-            }
-            
-            print("")
-        }
-        
-        for pin in self.games.values {
-            self.annotateLocation(pin)
-        }
-    }
     
     func gameExpired(_ game: Game?) -> Bool
     {
@@ -159,19 +106,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         }
     }
     
-    func downloadGames()
-    {
-        let gamesRef = Database.database().reference().child("games")
-        gamesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            // Note: if the game object in the database and in my code had all the same propeties,
-            // would copying be easier
-            if let dict = snapshot.value as? [String:AnyObject] {
-                self.gamesInDB = dict
-            }
-        }, withCancel: nil)
-    }
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -186,9 +120,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         // get the current location of a user
         configureLocationManager()
         
-        // download active games from firebase
-        downloadGames()
-        
         observeGames()
         
         //self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
@@ -199,31 +130,33 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         let ref = Database.database().reference().child("games")
         // TODO: adds duplicates
         ref.observe(.childAdded, with: { (snapshot) in
-            guard let uid = Auth.auth().currentUser?.uid else {return}
             let gameId = snapshot.key
             
-            if gameId == uid {
-                return
-            }
-            
             if let gameDict = snapshot.value as? [String:Any] {
+                
+                let game = Game()
+                
                 let numPlayers = gameDict["numPlayers"] as? String
                 let address = gameDict["address"] as? String
                 let startTime = gameDict["startTime"] as? String
                 let durationMins = gameDict["durationMins"] as? String
                 let durationHours = gameDict["durationHours"] as? String
                 
-                self.games[gameId] = Game()
+                game.address = address
+                game.identifier = gameId
+                game.numPlayers = Int(numPlayers!)
+                game.startTime = startTime
+                game.durationMins = Int(durationMins!)
+                game.durationHours = Int(durationHours!)
                 
-                self.games[gameId]?.address = address
-                self.annotateLocation(self.games[gameId]!)
-                
-                self.games[gameId]?.identifier = gameId
-                self.games[gameId]?.numPlayers = Int(numPlayers!)
-                self.games[gameId]?.startTime = startTime
-                self.games[gameId]?.durationMins = Int(durationMins!)
-                self.games[gameId]?.durationHours = Int(durationHours!)
-                
+                if self.gameExpired(game) {
+                    GamesVC.gameId = gameId
+                    GamesVC.getPlayersList(gameId)
+                }
+                else {
+                    self.games[gameId] = game
+                    self.annotateLocation(game)
+                }
             }
         }, withCancel: nil)
         

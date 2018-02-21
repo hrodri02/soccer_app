@@ -219,12 +219,6 @@ class CreateGameVC: UIViewController
         }
     }
     
-    /*
-    @IBAction func dissmissErrorMessage(_ sender: Any) {
-        
-    }
-    */
-    
     @objc func handleCreateGame() {
         let currentUID = Auth.auth().currentUser?.uid
         let userRef = Database.database().reference().child("users").child(currentUID!)
@@ -233,9 +227,6 @@ class CreateGameVC: UIViewController
         handleSliderValueOnButtonPress(slider)
         
         if let coordinate = coor {
-            if game != nil {
-                map?.removeAnnotation(game!)
-            }
             
             game = Game(durHours, durMins, startTime, addr, coordinate)
             game?.numPlayers = 0
@@ -250,8 +241,6 @@ class CreateGameVC: UIViewController
                     print(err!)
                 }
                 
-                let dstVC = self.presentingViewController?.childViewControllers[0].childViewControllers[0] as? GamesVC
-                dstVC?.newGame = self.game
                 self.dismiss(animated: true, completion: nil)
             }
         }
