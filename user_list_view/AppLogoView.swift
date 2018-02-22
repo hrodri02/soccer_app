@@ -91,7 +91,7 @@ class AppLogoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if imageView.bounds.height < 40 {
+        if imageView.bounds.height < 80 {
             imageView.alpha = 0
         } else {
             imageView.alpha = 1
