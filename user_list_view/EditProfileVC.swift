@@ -74,6 +74,16 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         return button
     }()
     
+    let selectPositionLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = .superLightColor
+        label.text = "<Select Position>"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     lazy var experienceButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = .lightColor
@@ -83,6 +93,16 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleExperienceButton), for: .touchUpInside)
         return button
+    }()
+    
+    let selectExperienceLabel: UILabel = {
+        var label = UILabel()
+        label.textColor = .superLightColor
+        label.text = "<Select Experience>"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+       return label
     }()
     
     let favoriteClubTeamLabel: UILabel = {
@@ -106,9 +126,11 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         let button = UIButton(type: .system)
         button.backgroundColor = .lightColor
         button.setTitle("Update Profile", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(UIColor.superLightColor, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 20
+        button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(handleUpdateProfile), for: .touchUpInside)
         return button
     }()
@@ -223,7 +245,9 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         experienceCV.register(ExperienceCell.self, forCellWithReuseIdentifier: cellIdExp)
         
         view.addSubview(positionButton)
+        view.addSubview(selectPositionLabel)
         view.addSubview(experienceButton)
+        view.addSubview(selectExperienceLabel)
         view.addSubview(favoriteClubTeamLabel)
         view.addSubview(favoriteClubTeamTextField)
         view.addSubview(updateProfileButton)
@@ -231,7 +255,9 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         setupFavoriteClubTeamLabel()
         setupFavoriteClubTeamTextField()
         setupPositionButton()
+        setupSelectPositionLabel()
         setupExperienceButton()
+        setupSelectExperienceLabel()
         setupUpdateProfileButton()
     }
     
@@ -248,7 +274,7 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
     func setupFavoriteClubTeamLabel()
     {
         favoriteClubTeamLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
-        favoriteClubTeamLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 12).isActive = true
+        favoriteClubTeamLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
         favoriteClubTeamLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         favoriteClubTeamLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
     }
@@ -257,38 +283,46 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
     {
         favoriteClubTeamTextField.leftAnchor.constraint(equalTo: favoriteClubTeamLabel.rightAnchor, constant: 20).isActive = true
         favoriteClubTeamTextField.rightAnchor.constraint(equalTo: positionButton.rightAnchor).isActive = true
-        favoriteClubTeamTextField.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 12).isActive = true
-        favoriteClubTeamTextField.heightAnchor.constraint(equalToConstant: 16).isActive = true
-    }
-    
-    func setupPositionButton()
-    {
-        positionButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
-        positionButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
-        positionButton.topAnchor.constraint(equalTo: experienceButton.bottomAnchor, constant: 12).isActive = true
-        positionButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        favoriteClubTeamTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        favoriteClubTeamTextField.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
     func setupExperienceButton()
     {
         experienceButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
         experienceButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
-        experienceButton.topAnchor.constraint(equalTo: favoriteClubTeamLabel.bottomAnchor, constant: 12).isActive = true
-        experienceButton.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        experienceButton.topAnchor.constraint(equalTo: favoriteClubTeamTextField.bottomAnchor, constant: 12).isActive = true
+        experienceButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    func setupSelectExperienceLabel() {
+        selectExperienceLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        selectExperienceLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
+        selectExperienceLabel.topAnchor.constraint(equalTo: experienceButton.bottomAnchor, constant: 12).isActive = true
+        selectExperienceLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    func setupPositionButton()
+    {
+        positionButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        positionButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
+        positionButton.topAnchor.constraint(equalTo: selectExperienceLabel.bottomAnchor, constant: 12).isActive = true
+        positionButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    func setupSelectPositionLabel() {
+        selectPositionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        selectPositionLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
+        selectPositionLabel.topAnchor.constraint(equalTo: positionButton.bottomAnchor, constant: 12).isActive = true
+        selectPositionLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
     func setupUpdateProfileButton()
     {
         updateProfileButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         updateProfileButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        updateProfileButton.widthAnchor.constraint(equalToConstant: 180).isActive = true
-        updateProfileButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
-    }
-
-    override func didReceiveMemoryWarning()
-    {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        updateProfileButton.widthAnchor.constraint(equalToConstant: updateProfileButton.intrinsicContentSize.width + 10).isActive = true
+        updateProfileButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -324,11 +358,13 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         if collectionView == self.positionCV
         {
             positionSelected = positions[indexPath.item].positionName
+            selectPositionLabel.text = positionSelected ?? "<Select Position>"
             handleDismiss()
         }
         else
         {
             experienceSelected = experience[indexPath.item].years
+            selectExperienceLabel.text = experienceSelected ?? "<Select Experience>"
             handleDismiss()
         }
     }
