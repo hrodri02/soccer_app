@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
         UISearchBar.appearance().barTintColor = UIColor(r:0,g:90,b:0)
         UISearchBar.appearance().tintColor = UIColor(r:0,g:200,b:0)
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = UIColor(r:0,g:200,b:0)
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor =  UIColor(r:0,g:200,b:0)
    
         registerForPushNotifications()
         return true
