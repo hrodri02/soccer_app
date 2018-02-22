@@ -372,7 +372,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         homeScreenView.translatesAutoresizingMaskIntoConstraints = false
         homeScreenView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor).isActive = true
         homeScreenView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor).isActive = true
-        homeScreenView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        homeScreenView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         homeScreenView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -12).isActive = true
     }
     

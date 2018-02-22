@@ -828,7 +828,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     func setupBackgroundImageView()
     {
         backgroundImageView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        backgroundImageView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        backgroundImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         backgroundImageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         backgroundImageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }

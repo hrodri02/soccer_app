@@ -509,7 +509,6 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     
     func setupDeleteButton()
     {
-        // add constraints to deleteButton
         deleteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         deleteButton.topAnchor.constraint(equalTo: positionCV.bottomAnchor, constant: 20).isActive = true
         deleteButton.widthAnchor.constraint(equalToConstant: 130).isActive = true
@@ -519,7 +518,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     func setupBackgroundImageView()
     {
         backgroundImageView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        backgroundImageView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+        backgroundImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         backgroundImageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         backgroundImageView.heightAnchor.constraint(equalToConstant: 200).isActive = true
     }
