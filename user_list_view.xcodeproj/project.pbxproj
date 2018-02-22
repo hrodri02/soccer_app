@@ -46,7 +46,6 @@
 		0C5CE8371F0EA2C9004847D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C5CE8361F0EA2C9004847D7 /* Assets.xcassets */; };
 		0C5CE83A1F0EA2C9004847D7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C5CE8381F0EA2C9004847D7 /* LaunchScreen.storyboard */; };
 		0C5CE8451F0EA2C9004847D7 /* user_list_viewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CE8441F0EA2C9004847D7 /* user_list_viewTests.swift */; };
-		0C5CE85E1F0EA331004847D7 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5CE85D1F0EA331004847D7 /* Event.swift */; };
 		0C73386E1F195F16009C7AAC /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C73386D1F195F16009C7AAC /* LoginVC.swift */; };
 		0C7338701F1A6DDE009C7AAC /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C73386F1F1A6DDE009C7AAC /* ProfileVC.swift */; };
 		0C7338721F1C2FE9009C7AAC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C7338711F1C2FE8009C7AAC /* MapKit.framework */; };
@@ -112,7 +111,6 @@
 		0C5CE8401F0EA2C9004847D7 /* user_list_viewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = user_list_viewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C5CE8441F0EA2C9004847D7 /* user_list_viewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = user_list_viewTests.swift; sourceTree = "<group>"; };
 		0C5CE8461F0EA2C9004847D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0C5CE85D1F0EA331004847D7 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		0C73386D1F195F16009C7AAC /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		0C73386F1F1A6DDE009C7AAC /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		0C7338711F1C2FE8009C7AAC /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -250,7 +248,7 @@
 				0C5CE82F1F0EA2C9004847D7 /* AppDelegate.swift */,
 				0C0A554E1F25A0CE00687830 /* Player.swift */,
 				0C1DDC101F468BD0005AB640 /* SearchFooter.swift */,
-				0C5CE85D1F0EA331004847D7 /* Event.swift */,
+				06206FE920379E1200ECA8F6 /* Constants.swift */,
 				06C58A002017E40000877B20 /* View */,
 				066368FB1FF5979200581E5D /* Game */,
 				064065791FFEEA09006B65AB /* Profile */,
@@ -264,7 +262,6 @@
 				0C5CE8381F0EA2C9004847D7 /* LaunchScreen.storyboard */,
 				0C5CE83B1F0EA2C9004847D7 /* Info.plist */,
 				0641F84920322DF0008136C4 /* GoogleService-Info.plist */,
-				06206FE920379E1200ECA8F6 /* Constants.swift */,
 			);
 			path = user_list_view;
 			sourceTree = "<group>";
@@ -560,7 +557,6 @@
 				0C4D34BB1F215150009FE302 /* CreateGameVC.swift in Sources */,
 				0C1DDC171F47C830005AB640 /* FriendsTVCell.swift in Sources */,
 				0C320AFF1F2B010F002BE4A1 /* Message.swift in Sources */,
-				0C5CE85E1F0EA331004847D7 /* Event.swift in Sources */,
 				06421AF61FAC16D5004DA95E /* PositionCell.swift in Sources */,
 				06421AFD1FB063EA004DA95E /* Extensions.swift in Sources */,
 				0C0A554F1F25A0CE00687830 /* Player.swift in Sources */,
