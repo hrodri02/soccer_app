@@ -10,12 +10,11 @@ import UIKit
 import Firebase
 import MobileCoreServices
 import AVFoundation
-//import UserNotifications
 
 class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     var imageSelected: Int?
-    var soccerPlayer = Player()
+    //var soccerPlayer = Player()
     var player: Player?
     
     var favoriteClubRecieved: String? {
@@ -662,48 +661,14 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        
-        /* if a new user logs in */
-        if (soccerPlayer.name != nil)
-        {
-            self.nameLabel.text = self.soccerPlayer.name
-            self.experience.text = self.soccerPlayer.experience
-            self.favoriteClubTeam.text = self.soccerPlayer.favClubTeam
-            self.position.text = self.soccerPlayer.position
-            self.playButton.isHidden = self.player?.videoURLStr == nil
-            
-            if let profileImageURL = soccerPlayer.profileImageURLStr
-            {
-                self.profileImage.loadImageUsingCacheWithURLStr(urlStr: profileImageURL)
-            
-            }
-            else
-            {
-                self.profileImage.image = UIImage(named: "soccer_player")
-            }
-            
-            if let backgroundImageURL = soccerPlayer.backgroundImageURLStr
-            {
-                self.backgroundImageView.loadImageUsingCacheWithURLStr(urlStr: backgroundImageURL)
-            }
-            else
-            {
-                self.backgroundImageView.image = UIImage()
-            }
-        }
-        /* if the same user is still logged in */
-        else if (player == nil)
-        {
-            player = Player()
-            getUserData()
-        }
+        getUserData()
     }
     
-    /* NOTE Everytime the profile view controller appears we read from the database */
+    /* NOTE: Everytime the profile view controller appears we read from the database */
     func getUserData()
     {
         let uid = Auth.auth().currentUser?.uid
-        
+        player = Player()
         Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject]
             {
@@ -726,27 +691,34 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                     self.player?.profileImageURLStr = profileImageURL
                     self.profileImage.loadImageUsingCacheWithURLStr(urlStr: profileImageURL)
                     self.videoImageView.loadImageUsingCacheWithURLStr(urlStr: profileImageURL)
+                    
+                    if let height = self.player?.profileImageHeight, let width = self.player?.profileImageWidth  {
+                        self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
+                        self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
+                                                                                                constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
+                        self.profileImage.contentMode = .scaleAspectFill
+                        self.profileImageViewTopAnchor?.isActive = true
+                        self.profileImage.clipsToBounds = true
+                    }
                 }
                 else
                 {
                     self.profileImage.image = UIImage(named: "soccer_player")
                     self.player?.profileImageWidth = self.profileImage.image?.size.width as NSNumber?
                     self.player?.profileImageHeight = self.profileImage.image?.size.height as NSNumber?
+                    
+                    self.profileImageViewHeightAnchor?.constant = self.view.frame.height/6
+                    self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
+                                                                                            constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
+                    self.profileImage.contentMode = .scaleAspectFit
+                    self.profileImageViewTopAnchor?.isActive = true
+                    self.profileImage.clipsToBounds = true
                 }
                 
                 if let backgroundImageURL = dictionary["backgroundImageURL"] as? String
                 {
                     self.player?.backgroundImageURLStr = backgroundImageURL
                     self.backgroundImageView.loadImageUsingCacheWithURLStr(urlStr: backgroundImageURL)
-                }
-                
-                if let height = self.player?.profileImageHeight, let width = self.player?.profileImageWidth  {
-                    
-                    self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
-                    self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
-                                                                                            constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
-                    self.profileImageViewTopAnchor?.isActive = true
-                    self.profileImage.clipsToBounds = true
                 }
                 
                 DispatchQueue.main.async(execute: {
