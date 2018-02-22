@@ -111,6 +111,9 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if !isTimeConflict() {
                 addUserToGame()
             }
+            else {
+                self.createAlert(title: "Error", msg: "There is a time conflict with another game you are apart of!")
+            }
         }
         else {
             removeUserFromGame()
@@ -287,7 +290,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             if (startDateOfGame! <= startDate) && (startDate < endDateOfGame!) ||
                 (startDateOfGame! < endDate) && (endDate <= endDateOfGame!)
             {
-                self.createAlert(title: "Error", msg: "There is a time conflict with another game you are apart of")
                 return true
             }
         }
