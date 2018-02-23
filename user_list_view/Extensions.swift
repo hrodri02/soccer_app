@@ -31,8 +31,8 @@ extension UIImageView
             return
         }
         
+        // if the image hasn't been cached then download it and cache it
         let url = URL(string: urlStr)
-        
         let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
             
             if error != nil {
