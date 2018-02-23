@@ -8,16 +8,21 @@
 
 import UIKit
 import Firebase
+import CoreLocation
 
 class SuggestedFriendsTVC: UITableViewController
 {
     var searchFooter = SearchFooter(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
     
     let searchController = UISearchController(searchResultsController: nil)
+    let FIFTY_MILES_IN_METERS = 80450.0
     var players = [Player]()
     var friendRequestsDict = [String:Bool]()
     var friends = [Player]()
     var filteredPlayers = [Player]()
+    
+    var userLat: Double?
+    var userLon: Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,17 +44,28 @@ class SuggestedFriendsTVC: UITableViewController
         // register a custom table view cell
         self.tableView.register(SuggestedFriendsTVCell.self, forCellReuseIdentifier: "SuggestedFriendsTVCell")
         
+        observeUserCoordinate()
         observeSuggestedFriends()
+    }
+    
+    func observeUserCoordinate() {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        
+        let userRef = Database.database().reference().child("users").child(uid)
+        
+        userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let userDict = snapshot.value as? [String:Any] else {return}
+            guard let coor = userDict["coordinate"] as? [String:Double] else {return}
+            self.userLat = coor["lat"]
+            self.userLon = coor["lon"]
+        }, withCancel: nil)
     }
 
     func observeSuggestedFriends() {
-        guard let currentUID = Auth.auth().currentUser?.uid else {
-            return
-        }
+        guard let currentUID = Auth.auth().currentUser?.uid else {return}
         
         let friendsOfUserRef = Database.database().reference().child("friendships").child(currentUID)
-        
-        friendsOfUserRef.observe(.value, with: { (snapshot) in
+        friendsOfUserRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let friendsDict = snapshot.value as? [String:Bool] {
                 self.friendRequestsDict = friendsDict
@@ -85,10 +101,33 @@ class SuggestedFriendsTVC: UITableViewController
                 player.experience = user["experience"] as? String
                 player.favClubTeam = user["favClubTeam"] as? String
                 player.position = user["position"] as? String
-                self.players.append(player)
-                self.players.sort(by: { (player1, player2) -> Bool in
-                    return player1.name! < player2.name!
-                })
+                
+                var distanceInMeters: Double? = nil
+                if let userLat = self.userLat, let userLon = self.userLon {
+                    if let coordinate = user["coordinate"] as? [String:Double] {
+                        guard let lat = coordinate["lat"] else {return}
+                        guard let lon = coordinate["lon"] else {return}
+                        let coor1 = CLLocation(latitude: lat,longitude: lon)
+                        let coor2 = CLLocation(latitude: userLat, longitude: userLon)
+                        distanceInMeters = coor1.distance(from: coor2)
+                    }
+                }
+                
+                if let dstInMeters = distanceInMeters {
+                    if dstInMeters <= self.FIFTY_MILES_IN_METERS {
+                        self.players.append(player)
+                        self.players.sort(by: { (player1, player2) -> Bool in
+                            return player1.name! < player2.name!
+                        })
+                    }
+                }
+                else {
+                    self.players.append(player)
+                    self.players.sort(by: { (player1, player2) -> Bool in
+                        return player1.name! < player2.name!
+                    })
+                }
+                
                 
                 self.timer?.invalidate()
                 self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
