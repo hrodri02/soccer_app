@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>pickupSoccer</string>
+	<string>PickupSoccer</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,7 +36,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Can this application access your location to send you notifications of games near by and to suggest friends close to your area?</string>
+	<string>Can this application access your location to send you notifications of games nearby and to suggest friends close to your area?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Can this application access your photo library so you can post your photos in your profile?</string>
 	<key>UIBackgroundModes</key>
