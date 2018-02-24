@@ -377,27 +377,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     
     @IBAction func unwindFromGameVC(segue:UIStoryboardSegue)
     {
-        // O(1): update the number players of the game selected
-        /*
-        if let uid = gameSelected?.identifier {
-            games[uid]?.numPlayers = gameSelected?.numPlayers
-        }
-        */
         
-        /*
-        if let srcVC = segue.source as? GameVC {
-            if srcVC.game == nil {
-                removeAnnotation(gameSelected)
-            }
-            else if srcVC.game?.address != oldAddress
-            {
-                if let uid = gameSelected?.identifier {
-                    removeAnnotation(gameSelected)
-                    games[uid] = srcVC.game
-                    annotateLocation(games[uid]!)
-                }
-            }
-        }
-        */
     }
 }
