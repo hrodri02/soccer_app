@@ -25,14 +25,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     var oldAddress: String?
     var oldCoordinate: CLLocationCoordinate2D?
     
-    private static var gameId: String?
-    
-    static var playersOfGame: [String:Bool]? {
-        didSet {
-            removeGameFromGamesList()
-        }
-    }
-    
     var timer: Timer?
     
     func gameExpired(_ game: Game?) -> Bool
@@ -57,21 +49,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         return true
     }
     
-    static func getPlayersList(_ gameId: String) {
-        // get the player list of the game
-        let playersRef = ref.child("games").child(gameId).child("players")
-        playersRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            // Note: if the game object in the database and in my code had all the same propeties,
-            // would copying be easier
-            if let dict = snapshot.value as? [String:Bool] {
-                GamesVC.playersOfGame = dict
-            }
-            
-            GamesVC.removeGame(gameId)
-        }, withCancel: nil)
-    }
-    
     static func removeGame(_ child: String) {
         let gameRef = self.ref.child("games").child(child)
         
@@ -83,26 +60,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
             }
             
             // successfully removed game
-        }
-    }
-    
-    static func removeGameFromGamesList()
-    {
-        if let players = playersOfGame
-        {
-            for (player, _) in players {
-                let gameRef = ref.child("users").child(player).child("games").child(gameId!)
-                
-                // remove game from games node
-                gameRef.removeValue { error, _ in
-                    
-                    if error != nil {
-                        print(error!)
-                    }
-                    
-                    // successfully removed game
-                }
-            }
         }
     }
     
@@ -122,13 +79,12 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         
         observeGames()
         
-        //self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(handleReloadMap), userInfo: nil, repeats: true)
     }
     
     func observeGames()
     {
         let ref = Database.database().reference().child("games")
-        // TODO: adds duplicates
         ref.observe(.childAdded, with: { (snapshot) in
             let gameId = snapshot.key
             
@@ -150,8 +106,8 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                 game.durationHours = Int(durationHours!)
                 
                 if self.gameExpired(game) {
-                    GamesVC.gameId = gameId
-                    GamesVC.getPlayersList(gameId)
+                    // remove it from the database
+                    //GamesVC.gameId = gameId
                 }
                 else {
                     self.games[gameId] = game
@@ -196,12 +152,12 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                 if let gameDict = snapshot.value as? [String:AnyObject] {
                     let playersDict = gameDict["players"] as? [String:Bool]
                     
-                    
                     if let players = playersDict {
                         
                         var i = 0
-                        for (player, _) in players {
-                            let gameRef = Database.database().reference().child("users").child(player).child("games").child(gameId)
+                        for (playerId, _) in players {
+                            let playerRef = Database.database().reference().child("users").child(playerId)
+                            let gameRef = playerRef.child("games").child(gameId)
                             
                             // remove game from games node
                             gameRef.removeValue { error, _ in
@@ -216,8 +172,30 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                                     self.removeAnnotation(game)
                                     self.games[gameId] = nil
                                 }
-                                
                             }
+                            
+                            // decrement the games played by the current player
+                            playerRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                                
+                                let uid = snapshot.key
+                                
+                                if let playerDict = snapshot.value as? [String:AnyObject] {
+                                    guard var gamesPlayed = playerDict["gamesPlayed"] as? Int else {return}
+                                    gamesPlayed -= 1;
+                                    
+                                    var values: [String:Any] = ["gamesPlayed": gamesPlayed]
+                                    
+                                    // decrement the games created by the player that created the game reomved
+                                    if (uid == gameId) {
+                                        guard var gamesCreated = playerDict["gamesCreated"] as? Int else {return}
+                                        gamesCreated -= 1
+                                        values["gamesCreated"] = gamesCreated
+                                     }
+                                    
+                                    playerRef.updateChildValues(values)
+                                }
+                                
+                            }, withCancel: nil)
                         }
                     }
                     
@@ -235,19 +213,14 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     @objc func handleReloadMap() {
         for (uid, soccerGame) in games {
             if gameExpired(soccerGame) {
-                GamesVC.gameId = uid
+                // removes game from database
+                GamesVC.removeGame(uid)
                 
-                if soccerGame.numPlayers != 0 {
-                    GamesVC.getPlayersList(uid)
-                }
-                else {
-                    // removes game from database
-                    GamesVC.removeGame(uid)
-                    // removes game from map
-                    removeAnnotation(soccerGame)
-                    
-                    games[uid] = nil
-                }
+                // removes game from map
+                removeAnnotation(soccerGame)
+                
+                // removes game from dictionary
+                games[uid] = nil
             }
         }
     }

@@ -112,6 +112,7 @@ class CreateGameVC: UIViewController
         
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController?.searchResultsUpdater = resultsViewController
+        
         searchController?.searchBar.placeholder = "Place"
         searchController?.searchBar.barTintColor = .lightColor
         searchController?.searchBar.tintColor = .superLightColor
@@ -121,6 +122,8 @@ class CreateGameVC: UIViewController
         view.addSubview(subView!)
  
         searchController?.searchBar.sizeToFit()
+        
+        // prevents the navigation bar from being hidden when searching
         searchController?.hidesNavigationBarDuringPresentation = false
         
         // When UISearchController presents the results view, present it in
@@ -306,7 +309,10 @@ class CreateGameVC: UIViewController
 extension CreateGameVC: GMSAutocompleteResultsViewControllerDelegate {
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWith place: GMSPlace) {
+
         searchController?.isActive = false
+        
+        print(place.name)
 
         searchController?.searchBar.text = place.name
         addr = place.name

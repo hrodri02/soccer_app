@@ -27,12 +27,6 @@ class EditGameVC: UIViewController
     var subView: UIView?
     static let ref = Database.database().reference()
     private static var gameId: String?
-    static var playersOfGame: [String:Bool]? {
-        didSet {
-            removeGameFromGamesList()
-        }
-    }
-    
     var gamesUserIsPartOf = [(Date,Date)]()
     
     // MARK: - UI components
@@ -257,21 +251,6 @@ class EditGameVC: UIViewController
         }
     }
     
-    static func getPlayersList(_ gameId: String) {
-        // get the player list of the game
-        let playersRef = ref.child("games").child(gameId).child("players")
-        playersRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            // Note: if the game object in the database and in my code had all the same propeties,
-            // would copying be easier
-            if let dict = snapshot.value as? [String:Bool] {
-                GamesVC.playersOfGame = dict
-            }
-            
-            GamesVC.removeGame(gameId)
-        }, withCancel: nil)
-    }
-    
     static func removeGame(_ child: String) {
         let gameRef = self.ref.child("games").child(child)
         
@@ -286,29 +265,6 @@ class EditGameVC: UIViewController
         }
     }
     
-    static func removeGameFromGamesList()
-    {
-        if let players = playersOfGame
-        {
-            
-            for (player, isPartOfGame) in players {
-                if isPartOfGame {
-                    let gameRef = ref.child("users").child(player).child("games").child(gameId!)
-                    
-                    // remove game from games node
-                    gameRef.removeValue { error, _ in
-                        
-                        if error != nil {
-                            print(error!)
-                        }
-                        
-                        // successfully removed game
-                    }
-                }
-            }
-        }
-    }
-    
     // MARK: - Navigation
     @objc func handleBack()
     {
@@ -317,9 +273,8 @@ class EditGameVC: UIViewController
     
     @objc func handleDelete()
     {
-        EditGameVC.gameId = (game?.identifier)!
-        EditGameVC.getPlayersList((game?.identifier)!)
-    
+        guard let gameId = game?.identifier else {return}
+        EditGameVC.removeGame(gameId)
         if let presenter = presentingViewController?.childViewControllers[0] as? GameVC {
             presenter.game = nil
         }
@@ -337,7 +292,9 @@ class EditGameVC: UIViewController
         handleSliderValueOnButtonPress(slider)
         
         if let coordinate = coor {
+            guard let gameId = Auth.auth().currentUser?.uid else {return}
             game = Game()
+            game?.identifier = gameId
             game?.address = addr
             game?.durationHours = durHours
             game?.durationMins = durMins
@@ -442,6 +399,7 @@ extension EditGameVC: GMSAutocompleteResultsViewControllerDelegate {
         searchController?.isActive = false
         
         // Do something with the selected place.
+        print(place.name)
         
         searchController?.searchBar.text = place.name
         addr = place.name
