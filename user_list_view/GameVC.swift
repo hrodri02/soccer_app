@@ -134,7 +134,6 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         
         cell?.textLabel?.text = player.name
-        cell?.detailTextLabel?.text = player.email
         return cell!
     }
     
