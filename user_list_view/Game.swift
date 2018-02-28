@@ -38,4 +38,8 @@ class Game: NSObject, MKAnnotation
         self.coordinate = coordinate
         super.init()
     }
+    
+    deinit {
+        print(identifier! + " is being deinitialzed")
+    }
 }
