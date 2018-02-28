@@ -102,7 +102,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 self.player?.favClubTeam = dictionary["favClubTeam"] as? String
                 self.player?.position = dictionary["position"] as? String
 
-                self.performSegue(withIdentifier: "goToGamesVC", sender: self)
+                self.dismiss(animated: true, completion: nil)
             }
             
             
@@ -147,7 +147,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 }
                 
                 // Saved user successfully into firebase db  
-                self.performSegue(withIdentifier: "goToGamesVC", sender: self)
+                self.dismiss(animated: true, completion: nil)
                 
             })
             
@@ -317,13 +317,13 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                         }
                         
                         // Saved user successfully into firebase db
-                        self.performSegue(withIdentifier: "goToGamesVC", sender: self)
+                        self.dismiss(animated: true, completion: nil)
                         
                     })
                 }
                 else {
                     self.saveTokenInDB(token ?? "")
-                    self.performSegue(withIdentifier: "goToGamesVC", sender: self)
+                    self.dismiss(animated: true, completion: nil)
                 }
             }, withCancel: nil)
             
