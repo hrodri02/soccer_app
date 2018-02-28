@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SAg-SC-hlf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="lAo-0s-7YG">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -84,13 +84,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <connections>
-                        <segue destination="lAo-0s-7YG" kind="show" identifier="goToGamesVC" id="pXw-6t-l9D"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1NG-IO-twC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1375" y="-286"/>
+            <point key="canvasLocation" x="1433" y="-1827"/>
         </scene>
         <!--GamesVC-->
         <scene sceneID="Mkj-UJ-o8I">
@@ -123,6 +120,7 @@
                         <outlet property="map" destination="jlY-a3-Tc9" id="q0Q-1a-0cl"/>
                         <segue destination="GVx-5p-KKd" kind="presentation" identifier="goToGameVC" id="fpq-8G-MiU"/>
                         <segue destination="RWK-9i-4Nh" kind="unwind" identifier="goToLoginVC" unwindAction="unwindFromGamesVCWithSegue:" id="bMT-nD-jpN"/>
+                        <segue destination="SAg-SC-hlf" kind="presentation" identifier="logout" id="HYv-2x-fYb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zky-wx-gIc" userLabel="First Responder" sceneMemberID="firstResponder"/>
