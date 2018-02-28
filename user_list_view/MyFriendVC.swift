@@ -12,11 +12,11 @@ import AVFoundation
 
 class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
-    var player: Player? {
-        didSet {
-            setupProfile()
-        }
-    }
+    
+    var profileImageViewHeightAnchor: NSLayoutConstraint?
+    var profileImageViewTopAnchor: NSLayoutConstraint?
+    
+    var player: Player?
     
     func setupProfile() {
         if let gamesPlayedByUser = player?.gamesPlayed {
@@ -38,19 +38,7 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         favoriteClubTeam.text = player?.favClubTeam
         position.text = player?.position
         
-        playButton.isHidden = self.player?.videoURLStr == nil
-        
-        if let profileImageURL = player?.profileImageURLStr
-        {
-            player?.profileImageURLStr = profileImageURL
-            profileImage.loadImageUsingCacheWithURLStr(urlStr: profileImageURL)
-        }
-        else
-        {
-            self.profileImage.image = UIImage(named: "soccer_player")
-            self.player?.profileImageWidth = self.profileImage.image?.size.width as NSNumber?
-            self.player?.profileImageHeight = self.profileImage.image?.size.height as NSNumber?
-        }
+        profileImageViewButton.isHidden = self.player?.videoURLStr == nil
         
         if let backgroundImageURL = player?.backgroundImageURLStr
         {
@@ -58,10 +46,6 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
             self.backgroundImageView.loadImageUsingCacheWithURLStr(urlStr: backgroundImageURL)
         }
     }
-    
-    
-    var profileImageViewHeightAnchor: NSLayoutConstraint?
-    var profileImageViewTopAnchor: NSLayoutConstraint?
     
     // Mark - UI components
     lazy var videoImageView: UIImageView = {
@@ -482,6 +466,8 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         setupFavoriteClubTeamLabel()
         setupPosition()
         setupPositionLabel()
+        
+        setupProfile()
     }
     
     // Mark - Setup constraints for components
@@ -528,17 +514,41 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
         profileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImage.widthAnchor.constraint(equalToConstant: 200).isActive = true
         
-        profileImageViewTopAnchor = profileImage.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: -100)
-        profileImageViewTopAnchor?.isActive = false
+        self.profileImageViewHeightAnchor = profileImage.heightAnchor.constraint(equalToConstant: 200)
+        self.profileImageViewHeightAnchor?.isActive = false
         
-        profileImageViewHeightAnchor = profileImage.heightAnchor.constraint(equalToConstant: 200)
-        profileImageViewHeightAnchor?.isActive = true
+        self.profileImageViewTopAnchor = profileImage.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor)
+        self.profileImageViewTopAnchor?.isActive = false
         
-        if let height = player?.profileImageHeight, let width = player?.profileImageWidth  {
+        if let profileImageURL = player?.profileImageURLStr
+        {
+            player?.profileImageURLStr = profileImageURL
+            profileImage.loadImageUsingCacheWithURLStr(urlStr: profileImageURL)
             
-            self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
+            if let height = player?.profileImageHeight, let width = player?.profileImageWidth  {
+                
+                self.profileImageViewHeightAnchor?.constant = 200*(CGFloat(truncating: height)/CGFloat(truncating: width))
+                self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
+                                                                                        constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
+                
+                
+                self.profileImage.contentMode = .scaleAspectFill
+                self.profileImageViewHeightAnchor?.isActive = true
+                self.profileImageViewTopAnchor?.isActive = true
+                self.profileImage.clipsToBounds = true
+            }
+        }
+        else
+        {
+            self.profileImage.image = UIImage(named: "soccer_player")
+            self.player?.profileImageWidth = self.profileImage.image?.size.width as NSNumber?
+            self.player?.profileImageHeight = self.profileImage.image?.size.height as NSNumber?
+            
+            self.profileImageViewHeightAnchor?.constant = self.view.frame.height/6
             self.profileImageViewTopAnchor = self.profileImage.topAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor,
                                                                                     constant: -(self.profileImageViewHeightAnchor?.constant)!/2)
+            self.profileImage.contentMode = .scaleAspectFit
+            self.profileImageViewHeightAnchor?.isActive = true
             self.profileImageViewTopAnchor?.isActive = true
             self.profileImage.clipsToBounds = true
         }
@@ -564,8 +574,6 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     {
         gamesCreated.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
         gamesCreated.topAnchor.constraint(equalTo: gamesPlayedLabel.bottomAnchor, constant: 12).isActive = true
-        gamesCreated.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        gamesCreated.heightAnchor.constraint(equalToConstant: 16).isActive = true
     }
     
     func setupGamesPlayedContainer()
@@ -580,8 +588,6 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     {
         gamesPlayed.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
         gamesPlayed.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 12).isActive = true
-        gamesPlayed.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        gamesPlayed.heightAnchor.constraint(equalToConstant: 16).isActive = true
     }
     
     func setupGamesPlayedLabel()
