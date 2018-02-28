@@ -138,6 +138,8 @@ class FriendsTVC: UITableViewController
                 player.profileImageWidth = user["profileImageWidth"] as? NSNumber
                 player.profileImageHeight = user["profileImageHeight"] as? NSNumber
                 player.backgroundImageURLStr = user["backgroundImageURL"] as? String
+                player.gamesCreated = user["gamesCreated"] as? Int
+                player.gamesPlayed = user["gamesPlayed"] as? Int
                 player.videoURLStr = user["videoURLstr"] as? String
                 player.experience = user["experience"] as? String
                 player.favClubTeam = user["favClubTeam"] as? String
