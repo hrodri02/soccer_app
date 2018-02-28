@@ -21,7 +21,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     static let ref = Database.database().reference()
     
     var games: [String:Game] = [:]
-    var gameSelected: Game?
+    var gameIdSelected: String?
     var oldAddress: String?
     var oldCoordinate: CLLocationCoordinate2D?
     
@@ -63,6 +63,15 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let user = Auth.auth().currentUser
+        if user == nil {
+           performSegue(withIdentifier: "logout", sender: self)
+        }
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -70,7 +79,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add Game", style: .plain, target: self, action: #selector(handleAddButton))
-        
         
         map.delegate = self
         
@@ -234,7 +242,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
             print(logoutError)
         }
         
-        performSegue(withIdentifier: "goToLoginVC", sender: nil)
+        performSegue(withIdentifier: "logout", sender: nil)
     }
     
     func annotateLocation(_ pin: Game)
@@ -279,8 +287,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     @objc func handleSelectAnnotationView(sender: UIGestureRecognizer)
     {
         if let uid = sender.view?.restorationIdentifier {
-            gameSelected = games[uid]
-            oldAddress = gameSelected?.address
+            gameIdSelected = uid
             performSegue(withIdentifier: "goToGameVC", sender: nil)
         }
     }
@@ -343,7 +350,9 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         {
             if let dstVC = segue.destination.childViewControllers[0] as? GameVC
             {
-                dstVC.game = gameSelected
+                guard let gameId = gameIdSelected else {return}
+                oldAddress = games[gameId]?.address
+                dstVC.game = games[gameId]
             }
         }
     }
