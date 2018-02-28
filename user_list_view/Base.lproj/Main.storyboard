@@ -118,13 +118,10 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="map" destination="jlY-a3-Tc9" id="q0Q-1a-0cl"/>
-                        <segue destination="GVx-5p-KKd" kind="presentation" identifier="goToGameVC" id="fpq-8G-MiU"/>
-                        <segue destination="RWK-9i-4Nh" kind="unwind" identifier="goToLoginVC" unwindAction="unwindFromGamesVCWithSegue:" id="bMT-nD-jpN"/>
                         <segue destination="SAg-SC-hlf" kind="presentation" identifier="logout" id="HYv-2x-fYb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zky-wx-gIc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="RWK-9i-4Nh" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1433" y="-1003"/>
         </scene>
