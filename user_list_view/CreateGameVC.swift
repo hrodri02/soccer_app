@@ -312,8 +312,6 @@ extension CreateGameVC: GMSAutocompleteResultsViewControllerDelegate {
 
         searchController?.isActive = false
         
-        print(place.name)
-
         searchController?.searchBar.text = place.name
         addr = place.name
         coor = place.coordinate

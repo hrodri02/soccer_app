@@ -24,6 +24,7 @@ class EditGameVC: UIViewController
     var startTime: String?
     var durHours: Int?
     var durMins: Int?
+    var numPlayers: Int?
     var subView: UIView?
     static let ref = Database.database().reference()
     private static var gameId: String?
@@ -279,7 +280,6 @@ class EditGameVC: UIViewController
             presenter.game = nil
         }
         
-        
         dismiss(animated: true, completion: nil)
     }
     
@@ -293,12 +293,14 @@ class EditGameVC: UIViewController
         
         if let coordinate = coor {
             guard let gameId = Auth.auth().currentUser?.uid else {return}
+            numPlayers = game?.numPlayers
             game = Game()
-            game?.identifier = gameId
-            game?.address = addr
             game?.durationHours = durHours
             game?.durationMins = durMins
             game?.startTime = startTime
+            game?.address = addr
+            game?.numPlayers = numPlayers
+            game?.identifier = gameId
             game?.coordinate = coordinate
             
             // make sure the edited game doesn't conflit with the other games the user is a part of
@@ -398,9 +400,7 @@ extension EditGameVC: GMSAutocompleteResultsViewControllerDelegate {
                            didAutocompleteWith place: GMSPlace) {
         searchController?.isActive = false
         
-        // Do something with the selected place.
-        print(place.name)
-        
+        // Do something with the selected place.        
         searchController?.searchBar.text = place.name
         addr = place.name
         coor = place.coordinate
