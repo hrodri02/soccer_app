@@ -53,9 +53,9 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
     let cellIdExp = "cellIdExp"
     
     let positions: [Position] = {
-        return [Position(pos: "forward"), Position(pos: "striker"), Position(pos: "right midfielder"), Position(pos: "defensive midfielder"),
-                Position(pos: "left midfielder"), Position(pos: "left back"), Position(pos: "stopper"), Position(pos: "right back"),
-                Position(pos: "goalkeeper")]
+        return [Position(pos: "Forward"), Position(pos: "Striker"), Position(pos: "Right Midfielder"), Position(pos: "Defensive Midfielder"),
+                Position(pos: "Left Midfielder"), Position(pos: "Left back"), Position(pos: "Stopper"), Position(pos: "Right Back"),
+                Position(pos: "Goalkeeper")]
     }()
     
     let experience: [Experience] = {
@@ -140,7 +140,9 @@ class EditProfileVC: UIViewController, UICollectionViewDataSource, UICollectionV
         let profileVC = presentingViewController?.childViewControllers[1].childViewControllers[0] as? ProfileVC
         
         if let teamSelected = favoriteClubTeamTextField.text {
-            profileVC?.favoriteClubRecieved = teamSelected
+            if teamSelected != "" {
+                profileVC?.favoriteClubRecieved = teamSelected
+            }
         }
         
         if let posSelected = positionSelected {
