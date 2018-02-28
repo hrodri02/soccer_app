@@ -74,7 +74,7 @@
         <!--LoginVC-->
         <scene sceneID="i1U-cD-roa">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="SAg-SC-hlf" customClass="LoginVC" customModule="user_list_view" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" automaticallyAdjustsScrollViewInsets="NO" id="SAg-SC-hlf" customClass="LoginVC" customModule="user_list_view" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="RnU-Pw-77w"/>
                         <viewControllerLayoutGuide type="bottom" id="uwM-ph-poL"/>
@@ -87,7 +87,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1NG-IO-twC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1433" y="-1827"/>
+            <point key="canvasLocation" x="-1471" y="-287"/>
         </scene>
         <!--GamesVC-->
         <scene sceneID="Mkj-UJ-o8I">
@@ -118,7 +118,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="map" destination="jlY-a3-Tc9" id="q0Q-1a-0cl"/>
-                        <segue destination="SAg-SC-hlf" kind="presentation" identifier="logout" id="HYv-2x-fYb"/>
+                        <segue destination="GVx-5p-KKd" kind="show" identifier="goToGameVC" id="2Cs-pg-LPZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zky-wx-gIc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -147,7 +147,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="SRt-1r-6xe">
             <objects>
-                <tabBarController id="lAo-0s-7YG" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" id="lAo-0s-7YG" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="3l3-BK-8Cw"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="667"/>

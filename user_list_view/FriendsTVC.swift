@@ -11,12 +11,19 @@ import Firebase
 
 class FriendsTVC: UITableViewController
 {
+    var playersDict = [String:Player]()
     var players = [Player]()
     var filteredPlayers = [Player]()
     var searchFooter = SearchFooter(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
     
     // nil is to tell search controller to use the same view we are searching to display results
     let searchController = UISearchController(searchResultsController: nil)
+    
+    // MARK: - view controller loading functions
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //observeUserFriends()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,11 +47,8 @@ class FriendsTVC: UITableViewController
         
         // register custom cell
         self.tableView.register(FriendsTVCell.self, forCellReuseIdentifier: "FriendsTVCell")
-        
         observeUserFriends()
     }
-    
-
 
     @objc func handleFriendRequests()
     {
@@ -130,6 +134,7 @@ class FriendsTVC: UITableViewController
     
     private func getFriendInfo(_ ref: DatabaseReference) {
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            let uid = snapshot.key
             if let user = snapshot.value as? [String:AnyObject] {
                 let player = Player()
                 player.name = user["name"] as? String
@@ -145,26 +150,29 @@ class FriendsTVC: UITableViewController
                 player.favClubTeam = user["favClubTeam"] as? String
                 player.position = user["position"] as? String
                 
-                
-                self.players.append(player)
-                self.players.sort(by: { (player1, player2) -> Bool in
-                    return player1.name! < player2.name!
-                })
-                
-                self.timer?.invalidate()
-                self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+                self.playersDict[uid] = player
+                self.attemptToReloadTable()
             }
         }, withCancel: nil)
     }
     
     var timer: Timer?
     
+    func attemptToReloadTable() {
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+    }
+    
     @objc func handleReloadTable() {
+        self.players = Array(self.playersDict.values)
+        self.players.sort(by: { (player1, player2) -> Bool in
+            return player1.name! < player2.name!
+        })
+        
         DispatchQueue.main.async(execute: {
             self.tableView.reloadData()
         })
     }
-    
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56

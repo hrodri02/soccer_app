@@ -660,7 +660,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
-        getUserData()
+        //getUserData()
     }
     
     /* NOTE: Everytime the profile view controller appears we read from the database */
@@ -718,6 +718,9 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 {
                     self.player?.backgroundImageURLStr = backgroundImageURL
                     self.backgroundImageView.loadImageUsingCacheWithURLStr(urlStr: backgroundImageURL)
+                }
+                else {
+                    self.backgroundImageView.image = nil
                 }
                 
                 DispatchQueue.main.async(execute: {
@@ -782,6 +785,8 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         setupFavoriteClubTeamLabel()
         setupPosition()
         setupPositionLabel()
+        
+        getUserData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

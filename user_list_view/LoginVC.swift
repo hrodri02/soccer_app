@@ -102,7 +102,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 self.player?.favClubTeam = dictionary["favClubTeam"] as? String
                 self.player?.position = dictionary["position"] as? String
 
-                self.dismiss(animated: true, completion: nil)
+                self.showTabBar()
             }
             
             
@@ -147,7 +147,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                 }
                 
                 // Saved user successfully into firebase db  
-                self.dismiss(animated: true, completion: nil)
+                self.showTabBar()
                 
             })
             
@@ -174,7 +174,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
             }
             
             // Saved user successfully into firebase db
-            self.dismiss(animated: true, completion: nil)
+            self.showTabBar()
             
         })
     }
@@ -265,6 +265,13 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
         Messaging.messaging().delegate = self
     }
     
+    func showTabBar() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarController
+    }
+    
     func saveTokenInDB(_ token: String)
     {
         if token == "" {
@@ -317,13 +324,12 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, UITextFieldDelegate, GIDSi
                         }
                         
                         // Saved user successfully into firebase db
-                        self.dismiss(animated: true, completion: nil)
-                        
+                        self.showTabBar()
                     })
                 }
                 else {
                     self.saveTokenInDB(token ?? "")
-                    self.dismiss(animated: true, completion: nil)
+                    self.showTabBar()
                 }
             }, withCancel: nil)
             

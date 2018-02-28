@@ -63,15 +63,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        let user = Auth.auth().currentUser
-        if user == nil {
-           performSegue(withIdentifier: "logout", sender: self)
-        }
-    }
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -115,7 +106,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
                 
                 if self.gameExpired(game) {
                     // remove it from the database
-                    //GamesVC.gameId = gameId
+                    GamesVC.removeGame(gameId)
                 }
                 else {
                     self.games[gameId] = game
@@ -238,11 +229,17 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
     {
         do {
             try Auth.auth().signOut()
+            showLoginVC()
         } catch let logoutError {
             print(logoutError)
         }
-        
-        performSegue(withIdentifier: "logout", sender: nil)
+    }
+    
+    func showLoginVC() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window?.rootViewController = loginVC
     }
     
     func annotateLocation(_ pin: Game)
@@ -348,6 +345,7 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         // Pass the selected object to the new view controller.
         if segue.identifier == "goToGameVC"
         {
+            print(segue.destination)
             if let dstVC = segue.destination.childViewControllers[0] as? GameVC
             {
                 guard let gameId = gameIdSelected else {return}

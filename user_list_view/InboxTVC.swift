@@ -16,7 +16,12 @@ class InboxTVC: UITableViewController {
     var users = [Player]()
     var timer: Timer?
 
-    // MARK: - viewdidload
+    // MARK: - view controller loading functions
+    override func viewWillAppear(_ animated: Bool) {
+        //fetchCurrentUser()
+        //observeUserMessages()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.backgroundColor = .darkColor
@@ -89,6 +94,8 @@ class InboxTVC: UITableViewController {
         guard let chatPartnerId = message.chatPartnerId() else {
             return
         }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let ref = Database.database().reference().child("users").child(chatPartnerId)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
