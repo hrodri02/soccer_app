@@ -14,7 +14,6 @@ import AVFoundation
 class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     var imageSelected: Int?
-    //var soccerPlayer = Player()
     var player: Player?
     
     var favoriteClubRecieved: String? {
