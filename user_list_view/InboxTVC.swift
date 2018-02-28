@@ -22,8 +22,6 @@ class InboxTVC: UITableViewController {
         self.tableView.backgroundColor = .darkColor
         navigationItem.title = "Inbox"
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        
         let image = UIImage(named: "new_message_icon")
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
         
@@ -241,20 +239,6 @@ class InboxTVC: UITableViewController {
     }
     
     // MARK: - Navigation
-    @objc func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError {
-            print(logoutError)
-        }
-        
-        if let presenter = presentingViewController as? LoginVC {
-            presenter.emailTextField.text = ""
-            presenter.passwordTextField.text = ""
-        }
-        
-        dismiss(animated: true, completion: nil)
-    }
     
     @objc func handleNewMessage() {
         let newMessageTVC = NewMessageTVC()

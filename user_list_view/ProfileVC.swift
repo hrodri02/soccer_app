@@ -740,7 +740,6 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         navigationItem.title = "Your Profile"
         view.backgroundColor = .darkColor
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(handleEditProfile))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
         view.addSubview(backgroundImageView)
         view.addSubview(profileImage)
@@ -956,20 +955,5 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         positionLabel.topAnchor.constraint(equalTo: favoriteClubTeamLabel.bottomAnchor, constant: 12).isActive = true
         positionLabel.widthAnchor.constraint(equalToConstant: 85).isActive = true
         positionLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
-    }
-    
-    @objc func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-        } catch let logoutError {
-            print(logoutError)
-        }
-        
-        if let presenter = presentingViewController as? LoginVC {
-            presenter.emailTextField.text = ""
-            presenter.passwordTextField.text = ""
-        }
-        
-        dismiss(animated: true, completion: nil)
     }
 }
