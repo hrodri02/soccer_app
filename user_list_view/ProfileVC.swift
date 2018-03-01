@@ -795,6 +795,7 @@ class ProfileVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
                 avPlayer?.pause()
             }
         }
+        avPlayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.rate), context: nil)
     }
     
     @objc func handleEditProfile()

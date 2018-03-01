@@ -17,6 +17,7 @@
 		065DDABB2028B23600BA931B /* ChatLogInputContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DDABA2028B23600BA931B /* ChatLogInputContainerView.swift */; };
 		066116E72016B9E000FB286E /* NewMessageTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066116E62016B9E000FB286E /* NewMessageTVC.swift */; };
 		067C374F200A9495001FF37D /* EditGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067C374E200A9495001FF37D /* EditGameVC.swift */; };
+		067EC6CF2047BD1D00CA99E0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 067EC6CE2047BD1D00CA99E0 /* AVFoundation.framework */; };
 		06AAEE161F99AF400093CF27 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AAEE151F99AF400093CF27 /* EditProfileVC.swift */; };
 		06C58A022018457C00877B20 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C58A012018457C00877B20 /* ChatMessageCell.swift */; };
 		06C9860320004A4600FF6123 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06C9860220004A4600FF6123 /* AdSupport.framework */; };
@@ -77,6 +78,7 @@
 		065DDABA2028B23600BA931B /* ChatLogInputContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogInputContainerView.swift; sourceTree = "<group>"; };
 		066116E62016B9E000FB286E /* NewMessageTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageTVC.swift; sourceTree = "<group>"; };
 		067C374E200A9495001FF37D /* EditGameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGameVC.swift; sourceTree = "<group>"; };
+		067EC6CE2047BD1D00CA99E0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		06AAEE151F99AF400093CF27 /* EditProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		06C58A012018457C00877B20 /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		06C9860220004A4600FF6123 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -130,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				067EC6CF2047BD1D00CA99E0 /* AVFoundation.framework in Frameworks */,
 				06C9860520004AC900FF6123 /* iAd.framework in Frameworks */,
 				06C9860320004A4600FF6123 /* AdSupport.framework in Frameworks */,
 				0C7338721F1C2FE9009C7AAC /* MapKit.framework in Frameworks */,
@@ -278,6 +281,7 @@
 		D578EE0B7205A039C8851A95 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				067EC6CE2047BD1D00CA99E0 /* AVFoundation.framework */,
 				06C9860420004AC900FF6123 /* iAd.framework */,
 				06C9860220004A4600FF6123 /* AdSupport.framework */,
 				0C7338711F1C2FE8009C7AAC /* MapKit.framework */,
