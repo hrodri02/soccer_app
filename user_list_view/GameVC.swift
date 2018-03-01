@@ -419,7 +419,7 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let player = Player()
                 if let playerDict = snapshot.value as? [String:Any] {
                     player.name = playerDict["name"] as? String
-                    player.email = playerDict["email"] as? String
+                    player.profileImageURLStr = playerDict["profileImageURL"] as? String
                     
                     if isPartOfGame! {
                         self.playersDict[playerId] = player
@@ -460,7 +460,7 @@ class GameVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let player = Player()
                 if let playerDict = snapshot.value as? [String:Any] {
                     player.name = playerDict["name"] as? String
-                    player.email = playerDict["email"] as? String
+                    player.profileImageURLStr = playerDict["profileImageURL"] as? String
                     
                     if isPartOfGame! {
                         self.playersDict[playerId] = player
