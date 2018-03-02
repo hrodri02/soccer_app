@@ -345,7 +345,6 @@ class GamesVC: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate
         // Pass the selected object to the new view controller.
         if segue.identifier == "goToGameVC"
         {
-            print(segue.destination)
             if let dstVC = segue.destination.childViewControllers[0] as? GameVC
             {
                 guard let gameId = gameIdSelected else {return}
