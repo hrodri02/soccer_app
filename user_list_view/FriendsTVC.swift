@@ -22,7 +22,6 @@ class FriendsTVC: UITableViewController
     // MARK: - view controller loading functions
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //observeUserFriends()
     }
     
     override func viewDidLoad() {
@@ -41,9 +40,6 @@ class FriendsTVC: UITableViewController
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         tableView.tableFooterView = searchFooter
-        
-        searchController.searchBar.barTintColor = .lightColor
-        searchController.searchBar.tintColor = .superLightColor
         
         // register custom cell
         self.tableView.register(FriendsTVCell.self, forCellReuseIdentifier: "FriendsTVCell")
@@ -123,11 +119,24 @@ class FriendsTVC: UITableViewController
         
         friendsOfUserRef.observe(.childAdded, with: { (snapshot) in
             let friendId = snapshot.key
-            let isFriend = snapshot.value as! Bool
+            guard let isFriend = snapshot.value as? Bool else {return}
             let friendRef = Database.database().reference().child("users").child(friendId)
             
             if isFriend {
                 self.getFriendInfo(friendRef)
+            }
+        }, withCancel: nil)
+        
+        friendsOfUserRef.observe(.childChanged, with: { (snapshot) in
+            let friendId = snapshot.key
+            guard let isFriend = snapshot.value as? Bool else {return}
+            if isFriend == false {
+                self.playersDict.removeValue(forKey: friendId)
+                self.handleReloadTable()
+            }
+            else {
+                let ref = Database.database().reference().child("users").child(friendId)
+                self.getFriendInfo(ref)
             }
         }, withCancel: nil)
     }
@@ -137,6 +146,7 @@ class FriendsTVC: UITableViewController
             let uid = snapshot.key
             if let user = snapshot.value as? [String:AnyObject] {
                 let player = Player()
+                player.uid = uid
                 player.name = user["name"] as? String
                 player.email = user["email"] as? String
                 player.profileImageURLStr = user["profileImageURL"] as? String

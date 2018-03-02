@@ -86,6 +86,21 @@ class SuggestedFriendsTVCell: UITableViewCell
         textLabel?.frame = CGRect(x: 56, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
     }
     
+    func observePendingFriendRequest() {
+        guard let currentUID = Auth.auth().currentUser?.uid else {return}
+        let pendingFriendRequestsRef = Database.database().reference().child("users").child(currentUID).child("pendingFriendRequests")
+        pendingFriendRequestsRef.observe(.childChanged, with: { (snapshot) in
+            guard let isPending = snapshot.value as? Bool else {return}
+            
+            if isPending == false {
+                self.addButton.setTitle("Add Friend", for: .normal)
+                self.addButtonWidthAnchor = self.addButton.widthAnchor.constraint(equalToConstant: 90)
+                self.addButtonWidthAnchor?.isActive = true
+            }
+        }, withCancel: nil)
+        
+    }
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: "SuggestedFriendsTVCell")
         
@@ -99,6 +114,7 @@ class SuggestedFriendsTVCell: UITableViewCell
         profileImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         friendRequestSent()
+        observePendingFriendRequest()
     }
     
     func setupAddButton()

@@ -264,21 +264,29 @@ class MyFriendVC: UIViewController, UIImagePickerControllerDelegate, UINavigatio
     @objc func handleDelete()
     {
         let friendshipsRef = Database.database().reference().child("friendships")
-        let currentUserUid = Auth.auth().currentUser?.uid
-        //let usersRef = Database.database().reference().child("users")
-        let uid = player?.uid
+        guard let currentUserUid = Auth.auth().currentUser?.uid else {return}
+        guard let uid = player?.uid else {return}
         
-        let deletedFriend = [uid! : false]
-        friendshipsRef.child(currentUserUid!).updateChildValues(deletedFriend, withCompletionBlock: { (err, ref) in
+        let deletedFriend = [uid : false]
+        let value = [currentUserUid: false]
+        
+        friendshipsRef.child(uid).updateChildValues(value) { (err, ref) in
+            if err != nil {
+                print(err!)
+            }
+        }
+        
+        friendshipsRef.child(currentUserUid).updateChildValues(deletedFriend, withCompletionBlock: { (err, ref) in
             
-            if err != nil
-            {
+            if err != nil {
                 print(err!)
             }
             
             // finised updating friendships node
             self.navigationController?.popViewController(animated: true)
         })
+        
+        
     }
     
     let nameLabel: UILabel = {

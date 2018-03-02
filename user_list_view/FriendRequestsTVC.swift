@@ -12,14 +12,11 @@ import Firebase
 class FriendRequestsTVC: UITableViewController
 {
     
-    var friendRequests: [String:Bool]? {
-        didSet {
-            downloadPlayersInfo()
-        }
-    }
+    var friendRequestsDict = [String:Player]()
     var players = [Player]()
     var filteredPlayers = [Player]()
     var searchFooter = SearchFooter(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
+    var timer: Timer?
     
     // nil is to tell search controller to use the same view we are searching to display results
     let searchController = UISearchController(searchResultsController: nil)
@@ -38,17 +35,10 @@ class FriendRequestsTVC: UITableViewController
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         tableView.tableFooterView = searchFooter
-        searchController.searchBar.barTintColor = .lightColor
-        searchController.searchBar.tintColor = .superLightColor
         
         // register custom cell
         self.tableView.register(FriendRequestsTVCell.self, forCellReuseIdentifier: "FriendRequestsTVCell")
-    }
-    
-    override func viewWillAppear(_ animated: Bool)
-    {
-        super.viewWillAppear(animated)
-        getFriendRequests()
+        observeFriendRequests()
     }
     
     override func didReceiveMemoryWarning() {
@@ -101,19 +91,19 @@ class FriendRequestsTVC: UITableViewController
         
         // Configure the cell...
         cell?.acceptButton.tag = indexPath.row
+        cell?.declineButton.tag = indexPath.row
         cell?.acceptButton.addTarget(self, action: #selector(handleAccept), for: .touchUpInside)
         cell?.declineButton.addTarget(self, action: #selector(handleDecline), for: .touchUpInside)
-        cell?.detailTextLabel?.text = player.email
         cell?.textLabel?.text = player.name
         
         return cell!
     }
     
     @objc func handleAccept(_ sender: UIButton) {
-        let currentUID = Auth.auth().currentUser?.uid
+        guard let currentUID = Auth.auth().currentUser?.uid else {return}
+        guard let otherUID = players[sender.tag].uid else {return}
         let usersRef = Database.database().reference().child("users")
-        let otherUID = players[sender.tag].uid
-        let friendRequestsRef = usersRef.child(currentUID!).child("newFriendRequests").child(otherUID!)
+        let friendRequestsRef = usersRef.child(currentUID).child("newFriendRequests").child(otherUID)
         
         players.remove(at: sender.tag)
         tableView.reloadData()
@@ -128,7 +118,7 @@ class FriendRequestsTVC: UITableViewController
             // removed friend request from database
         }
         
-        let pendingFriendRequestsRef = usersRef.child(otherUID!).child("pendingFriendRequests").child(currentUID!)
+        let pendingFriendRequestsRef = usersRef.child(otherUID).child("pendingFriendRequests").child(currentUID)
         pendingFriendRequestsRef.removeValue { (err, _) in
             
             if err != nil {
@@ -141,8 +131,8 @@ class FriendRequestsTVC: UITableViewController
         
         // update the friends list of the current user
         let friendshipsRef = Database.database().reference().child("friendships")
-        let friendshipsOfCurrentUsrRef = friendshipsRef.child(currentUID!)
-        let values = [otherUID!:true]
+        let friendshipsOfCurrentUsrRef = friendshipsRef.child(currentUID)
+        let values = [otherUID:true]
         friendshipsOfCurrentUsrRef.updateChildValues(values) { (err, _) in
             if err != nil {
                 print(err!)
@@ -151,8 +141,8 @@ class FriendRequestsTVC: UITableViewController
         }
         
         // update the friends list of the user that sent request
-        let senderFriendshipsRef = friendshipsRef.child(otherUID!)
-        let newFriend = [currentUID!:true]
+        let senderFriendshipsRef = friendshipsRef.child(otherUID)
+        let newFriend = [currentUID:true]
         senderFriendshipsRef.updateChildValues(newFriend) { (err, _) in
             if err != nil {
                 print(err!)
@@ -163,10 +153,10 @@ class FriendRequestsTVC: UITableViewController
     }
     
     @objc func handleDecline(_ sender: UIButton) {
-        let currentUID = Auth.auth().currentUser?.uid
-        let userRef = Database.database().reference().child("users").child(currentUID!)
-        let uidToRemove = players[sender.tag].uid
-        let friendRequestsRef = userRef.child("newFriendRequests").child(uidToRemove!)
+        guard let currentUID = Auth.auth().currentUser?.uid else {return}
+        guard let uidToRemove = players[sender.tag].uid else {return}
+        let userRef = Database.database().reference().child("users").child(currentUID)
+        let friendRequestsRef = userRef.child("newFriendRequests").child(uidToRemove)
         
         players.remove(at: sender.tag)
         tableView.reloadData()
@@ -180,8 +170,8 @@ class FriendRequestsTVC: UITableViewController
             // removed friend request from database
         }
         
-        let pendingFriendRequestsRef = Database.database().reference().child("users").child(uidToRemove!).child("pendingFriendRequests")
-        let values = [currentUID!: false]
+        let pendingFriendRequestsRef = Database.database().reference().child("users").child(uidToRemove).child("pendingFriendRequests")
+        let values = [currentUID: false]
         pendingFriendRequestsRef.updateChildValues(values) { (err, ref) in
             
             if err != nil {
@@ -221,39 +211,47 @@ class FriendRequestsTVC: UITableViewController
         
     }
     
-    func getFriendRequests()
+    func observeFriendRequests()
     {
         let usersRef = Database.database().reference().child("users")
-        let currentUID = Auth.auth().currentUser?.uid
-        let newFriendRequestRef = usersRef.child(currentUID!).child("newFriendRequests")
+        guard let currentUID = Auth.auth().currentUser?.uid else {return}
+        let newFriendRequestRef = usersRef.child(currentUID).child("newFriendRequests")
         
-        newFriendRequestRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            if let friendReqs = snapshot.value as? [String:Bool] {
-                self.friendRequests = friendReqs
+        newFriendRequestRef.observe(.childAdded, with: { (snapshot) in
+            let uid = snapshot.key
+            self.downloadPlayerInfo(uid)
+        }, withCancel: nil)
+    }
+    
+    func downloadPlayerInfo(_ uid: String)
+    {
+        let usersRef = Database.database().reference().child("users").child(uid)
+        
+        usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let playerDict = snapshot.value as? [String:AnyObject] {
+                let player = Player()
+                player.name = playerDict["name"] as? String
+                player.profileImageURLStr = playerDict["profileImageURL"] as? String
+                player.uid = uid
+                self.players.append(player)
+                self.attemptToReloadTable()
             }
         }, withCancel: nil)
     }
     
-    func downloadPlayersInfo() {
-        let usersRef = Database.database().reference().child("users")
+    func attemptToReloadTable() {
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleReloadTable() {
+        self.players.sort(by: { (player1, player2) -> Bool in
+            return player1.name! < player2.name!
+        })
         
-        for (uid, _) in friendRequests! {
-            usersRef.child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let playerDict = snapshot.value as? [String:AnyObject] {
-                    let player = Player()
-                    player.email = playerDict["email"] as? String
-                    player.name = playerDict["name"] as? String
-                    player.profileImageURLStr = playerDict["profileImageURL"] as? String
-                    player.uid = uid
-                    self.players.append(player)
-                    
-                    DispatchQueue.main.async(execute: {
-                        self.tableView.reloadData()
-                    })
-                    
-                }
-            }, withCancel: nil)
-        }
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

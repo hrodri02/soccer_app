@@ -36,8 +36,6 @@ class SuggestedFriendsTVC: UITableViewController
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         tableView.tableFooterView = searchFooter
-        searchController.searchBar.barTintColor = .lightColor
-        searchController.searchBar.tintColor = .superLightColor
         
         self.tableView.backgroundColor = .darkColor
         

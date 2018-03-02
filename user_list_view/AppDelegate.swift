@@ -1,4 +1,4 @@
- //
+//
 //  AppDelegate.swift
 //  user_list_view
 //
@@ -32,9 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         
-        UISearchBar.appearance().barTintColor = UIColor(r:0,g:90,b:0)
-        UISearchBar.appearance().tintColor = UIColor(r:0,g:200,b:0)
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor =  UIColor(r:0,g:200,b:0)
+        UISearchBar.appearance().barTintColor = .lightColor
+        UISearchBar.appearance().tintColor = .superLightColor
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = UIColor(r: 0, g: 200, b: 200)
    
         registerForPushNotifications()
         return true

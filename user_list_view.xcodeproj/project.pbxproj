@@ -35,7 +35,6 @@
 		0C320AFF1F2B010F002BE4A1 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C320AFE1F2B010F002BE4A1 /* Message.swift */; };
 		0C320B011F2C4ACC002BE4A1 /* SuggestedFriendsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C320B001F2C4ACC002BE4A1 /* SuggestedFriendsTVC.swift */; };
 		0C320B031F2C4B68002BE4A1 /* SuggestedFriendsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C320B021F2C4B68002BE4A1 /* SuggestedFriendsTVCell.swift */; };
-		0C320B051F2D44FF002BE4A1 /* FriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C320B041F2D44FF002BE4A1 /* FriendsVC.swift */; };
 		0C320B071F2E702A002BE4A1 /* UpperFriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C320B061F2E702A002BE4A1 /* UpperFriendsVC.swift */; };
 		0C394FD71F28358400C338A2 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C394FD61F28358400C338A2 /* Game.swift */; };
 		0C4D34BB1F215150009FE302 /* CreateGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4D34BA1F215150009FE302 /* CreateGameVC.swift */; };
@@ -96,7 +95,6 @@
 		0C320AFE1F2B010F002BE4A1 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		0C320B001F2C4ACC002BE4A1 /* SuggestedFriendsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedFriendsTVC.swift; sourceTree = "<group>"; };
 		0C320B021F2C4B68002BE4A1 /* SuggestedFriendsTVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedFriendsTVCell.swift; sourceTree = "<group>"; };
-		0C320B041F2D44FF002BE4A1 /* FriendsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsVC.swift; sourceTree = "<group>"; };
 		0C320B061F2E702A002BE4A1 /* UpperFriendsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpperFriendsVC.swift; sourceTree = "<group>"; };
 		0C394FD61F28358400C338A2 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		0C4D34BA1F215150009FE302 /* CreateGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGameVC.swift; sourceTree = "<group>"; };
@@ -177,7 +175,6 @@
 		0640657B1FFEEA1D006B65AB /* Friends */ = {
 			isa = PBXGroup;
 			children = (
-				0C320B041F2D44FF002BE4A1 /* FriendsVC.swift */,
 				06421AF91FAD3C8D004DA95E /* MyFriendVC.swift */,
 				0C320B061F2E702A002BE4A1 /* UpperFriendsVC.swift */,
 				0C1DDC141F47C78B005AB640 /* FriendsTVC.swift */,
@@ -534,7 +531,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C320B051F2D44FF002BE4A1 /* FriendsVC.swift in Sources */,
 				0C1DDC131F47C55E005AB640 /* SuggestedFriendsVC.swift in Sources */,
 				0C4D34C11F22E72C009FE302 /* InboxTVCell.swift in Sources */,
 				06D111AB20142B8C00DB36FE /* FriendRequestsTVCell.swift in Sources */,
