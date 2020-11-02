@@ -2,4 +2,4 @@
 
 Made to organize pick-up soccer games and to connect soccer players.
 
-![Image of home screen](https://github.com/hrodri02/soccer_app/blob/master/screenshots/LoginVC.png | width=100, height=400)
+<img src="https://github.com/hrodri02/soccer_app/blob/master/screenshots/LoginVC.png" alt="home screen" width="200" height="400">
